@@ -1,6 +1,5 @@
 # Cookie
-## Set-Cookie
-响应首部字段，其字段属性有：  
+## Set-Cookie  
 属性|说明
 -|-
 NAME=VALUE | 赋予 Cookie 的名称和其值（必需项）
