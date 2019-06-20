@@ -104,7 +104,7 @@
   * Upgrade
 
 # 部分首部字段解析
-- Cache-Control
+## Cache-Control
   * 缓存请求指令
     指令 | 参数 | 说明
     -|-|-
@@ -129,10 +129,10 @@
     max-age = [ 秒] | 必需 | 响应的最大Age值，即资源保存为缓存的最长时间
     s-maxage = [ 秒] | 必需 | 公共缓存服务器响应的最大Age值，若仅向单一用户重复返回响应则该指令无效
     cache-extension | - | 新指令标记（token），即可以自定义指令，若缓存服务器无法理解将会忽略该指令值
-- Connection
+## Connection
   * Connection: 不再转发的首部字段名（即 hop-by-hop）
   * Connection: close/Keep-Alive 管理持久连接
-- Accept  
+## Accept  
   值可以是：
   * 文本文件  
   text/html, text/plain, text/css ...  
