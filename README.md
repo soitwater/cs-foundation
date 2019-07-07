@@ -20,12 +20,14 @@
   * [HTTP](./Network/HTTP.md)
   * [HTTP状态码](./Network/HTTP状态码.md)
   * [HTTP首部](./Network/HTTP首部.md)
+  * [HTTP请求方法](./Network/HTTP请求方法.md)
   * [Cookie](./Network/Cookie.md)
   * [HTTPS](./Network/HTTPS.md)
   * [数据传输过程](./Network/数据传输过程.md)
   * [WEB服务器](./Network/WEB服务器.md)
   * [对HTTP的改进](./Network/对HTTP的改进.md)
   * [强制缓存与协商缓存](./Network/强制缓存与协商缓存.md)
+  * [CDN](./Network/CDN.md)
   * [使用express进行练习](./Network/使用express进行练习.md)
 
 ## Nginx
