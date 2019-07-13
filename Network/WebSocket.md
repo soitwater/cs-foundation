@@ -1,5 +1,45 @@
 # WebSocket
 
+## WebSocket
+### 概述
+- 客户端向 WebSocket 服务器通知（notify）一个带有所有 接收者ID（recipients IDs） 的事件（event），服务器接收后立即通知所有活跃的（active）客户端，只有ID在接收者ID序列中的客户端才会处理这个事件。
+- WebSocket 是全双工（双方同时进行双向通信）
+- 建立在 TCP 协议之上，服务器端的实现比较容易。
+- 与 HTTP 协议有着良好的兼容性。默认端口也是 80 和 443 ，并且握手阶段采用 HTTP 协议，因此握手时不容易屏蔽，能通过各种 HTTP 代理服务器。
+- 数据格式比较轻量，性能开销小，通信高效。
+- 可以发送文本，也可以发送二进制数据。
+- 没有同源限制，客户端可以与任意服务器通信。
+- 协议标识符是ws（如果加密，则为wss），服务器网址就是 URL。
+- WebSocket 客户端、服务端的最小单位是数据帧(frame)，一个或多个数据帧组成完整的消息(message)
+### 经过
+- 协议有两部分：握手和数据传输。
+- 握手
+  * 客户端：申请协议升级
+    ```js
+    GET /chat HTTP/1.1                           // 必须是GET方法
+    Host: server.example.com                     // 
+    Upgrade: websocket                           // 升级到 WebSocket 协议
+    Connection: Upgrade                          // 表示升级协议
+    Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==  // 与后面服务端响应首部的 Sec-WebSocket-Accept 是配套的，提供基本的防护(避免恶意/无意连接)
+    Origin: http://example.com
+    Sec-WebSocket-Protocol: chat, superchat
+    Sec-WebSocket-Version: 13                    // 表示 websocket 的版本。如果服务端不支持该版本，需要返回一个 Sec-WebSocket-Versionheader ，里面包含服务端支持的版本号。
+    ```
+  * 响应协议升级
+    ```js
+    HTTP/1.1 101 Switching Protocols                        // 101 表示协议切换
+    Upgrade: websocket
+    Connection: Upgrade
+    Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=      // 根据客户端请求首部的 Sec-WebSocket-Key 计算出来
+    Sec-WebSocket-Protocol: chat
+    ```
+### 数据帧
+
+### API
+
+### 连接保持+心跳
+  待补充
+
 ## 例子
 后端部分
 ```js
@@ -88,6 +128,175 @@ wss.broadcast = function (data) { // 广播
 </html>
 ```
 
+## 服务端主动通信or保持连接
+### 后端接口
+```js
+let i = 0
+app.get("/keep", function (req, res) {
+  i++
+  res.end("delay to send message: " + i)
+})
+```
+### 轮询(传统)
+- 通过`setInterval`或者`setTimeout`重复发起请求
+- `setInterval`的缺陷：因为网络是波动的,导致浏览器接受的数据的先后到达顺序可能与服务器发送顺序不一致  
+  解决方法是`setTimeout`
+  ```js
+  setInterval(() => {
+    fetch("http://localhost:8081/keep")
+      .then(res => console.log(new Date().toLocaleString(), res.text()))
+  }, 1000)
+  ```
+- `setTimeout`可保证数据的到达顺序
+  ```js
+  setTimeout(request, 2000)
+  function request () {
+    fetch("http://localhost:8081/keep")
+    .then(res => {
+      console.log(new Date().toLocaleString(), res.text())
+      setTimeout(request, 2000)
+    })
+  }
+  ```
+### 长轮询(Long Polling / Comet)
+- `setInterval`或者`setTimeout`都是通过发多次HTTP请求模拟的,请求过多将加重服务器负担
+- 基本思想：
+  ```
+  服务器检查上次返回的数据与此次请求时的数据之间是否有更新，如果有更新则返回新数据并结束此次连接，否则服务器 hold 住此次连接，直到有新数据时再返回相应。
+  而这种长时间的保持连接可以通过设置一个较大的 HTTP timeout 实现
+  ```
+- 长轮询的两种实现方式
+  * 基于Ajax的长轮询方式(虽然下面用的不是Ajax)
+    ```js
+    const express = require("express")
+    const fs = require("fs")
+    const path = require("path")
+    let app = express()
+    let flag = false
+
+    app.listen(3001, () => {
+
+    })
+    app.get('/', function (req, res) {
+      var html = fs.readFileSync(path.resolve(__dirname, 'user1.html'), 'utf-8');
+      res.send(html);
+    });	
+    app.get("/long", function (req, res) {
+      if (!flag) {
+        return
+      } else {
+        res.send("exec.")
+      }
+    })
+    app.get("/ok", function () {
+      flag = true
+    })
+    ```
+    ```html
+    <!doctype html>
+    <html>
+    <head></head>
+    <body>
+        <input type="button" name="button" value="提交" />
+      </div>
+      <script>
+        let btn = document.getElementsByName("button")[0]
+        btn.addEventListener("click", () => {
+          fetch("http://localhost:3001/ok")
+          .then(res => console.log(res.text())) // fetch 会有等待
+        })
+        function get () {
+          console.log(new Date().toLocaleString())
+          fetch("http://localhost:3001/long")
+          .then((res) => {
+            console.log(res)
+            if (res.status === 200) {
+              res.text().then(data => {
+                console.log(data)
+              })
+            }
+          })
+        } 
+        setInterval(get, 1000)
+      </script>
+    </body>
+    </html>
+    ```
+  * 基于iframe以及(http streaming)的方式(落时)
+    ```
+    Iframe是html标记，这个标记的src属性会保持对指定服务器的长连接请求，
+    服务器端则可以不停地返回数据，相对于Ajax方式，这种方式跟传统的服务器推则更接近
+    这种方式是通过JSONP的方式来响应数据(Ajax方式是通过回调函数)
+    ```
+## 服务器发送事件(Server-Sent Event)
+> 服务器发送事件（以下简称SSE）是HTML 5规范的一个组成部分，可以实现服务器到客户端的单向数据通信。通过 SSE ，客户端可以自动获取数据更新，而不用重复发送HTTP请求。多用于视频，大文件下载(支持断线重连)。
+> SSE发送的不是一次性的数据包，而是一个数据流(连续不断的发送)  
+> SSE基于http，不像web socket一样是个新协议
+> 一旦连接建立，“事件”便会自动被推送到客户端。服务器端SSE通过 事件流(Event Stream) 的格式产生并推送事件。事件流对应的 MIME类型 为 text/event-stream ，包含四个字段：event、data、id和retry。event表示事件类型，data表示消息内容，id用于设置客户端 EventSource 对象的 last event ID string 内部属性，retry指定了重新连接的时间。  
+> SSE相对于轮询更加简便,更实时，
+> 但SSE只支持`支持服务器到客户端单向的事件推送`,且不支持IE
+- 例子(阮一峰)
+  ```js
+  var http = require("http");
+  http.createServer(function (req, res) {
+    var fileName = "." + req.url
+    if (fileName === "./stream") {
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": '*',
+      });
+      res.write("retry: 10000\n");
+      res.write("event: connecttime\n");
+      res.write("data: " + (new Date()) + "\n\n");
+      res.write("data: " + (new Date()) + "\n\n");
+      interval = setInterval(function () {
+        res.write("data: " + (new Date()) + "\n\n");
+      }, 1000);
+      req.connection.addListener("close", function () {
+        clearInterval(interval);
+      }, false);
+    }
+  }).listen(8844, "127.0.0.1");
+  ```
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="example"></div>
+    <script>
+      var source = new EventSource('http://127.0.0.1:8844/stream')
+      var div = document.getElementById('example')
+      source.onopen = function (event) {
+        div.innerHTML += '<p>Connection open ...</p>'
+      }
+      source.onerror = function (event) {
+        div.innerHTML += '<p>Connection close.</p>'
+      }
+      source.addEventListener('connecttime', function (event) {
+        div.innerHTML += ('<p>Start time: ' + event.data + '</p>')
+      }, false)
+      source.onmessage = function (event) {
+        div.innerHTML += ('<p>Ping: ' + event.data + '</p>')
+      }
+    </script>
+  </body>
+  </html>
+  ```
+
+## 对比
+名称|传统轮询	|长轮询	|服务器发送事件	|WebSocket
+-|-|-|-|-
+浏览器支持	|几乎所有现代浏览器	|几乎所有现代浏览器	|非IE|主流
+服务器负载|	较少的CPU资源，较多的内存资源和带宽资源	与传统轮询相似，但是占用带宽较少	|与长轮询相似，除非每次发送请求后服务器不需要断开连接	|无需循环等待（长轮询），CPU和内存资源不以客户端数量衡量，而是以客户端事件数衡量。四种方式里性能最佳。
+客户端负载	|占用较多的内存资源与请求数。	|与传统轮询相似。	|浏览器中原生实现，占用资源很小。	|同Server-Sent Event。
+延迟	|非实时，延迟取决于请求间隔。	|同传统轮询。	|非实时，默认3秒延迟，延迟可自定义。	|实时。
+实现复杂度	|非常简单。|	需要服务器配合，客户端实现非常简单。	|需要服务器配合，而客户端实现甚至比前两种更简单。	|需要Socket程序实现和额外端口，客户端实现简单。
+
 ## 知识点
 - 一个相同的端口可以使用多个不同的`WebSocketServer`(证明?)
 - WebSocket的默认端口是：80与443，  
@@ -101,3 +310,6 @@ wss.broadcast = function (data) { // 广播
 
 ## 参考
 - [编写聊天室](https://www.liaoxuefeng.com/wiki/1022910821149312/1103332447876608)
+- [WebSocket 详解](https://segmentfault.com/a/1190000012948613)
+- [Server-Sent Event 教程](http://www.ruanyifeng.com/blog/2017/05/server-sent_events.html)
+- [MDN官方文档](https://developer.mozilla.org/zh-CN/docs/Web/API/WebSocket)
