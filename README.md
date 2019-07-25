@@ -39,5 +39,8 @@
 - [插件基础](./Plugins/插件基础.md)
 
 ## Git
+- [最小配置](./Git/最小配置.md)
+- [基础操作](./Git/基础操作.md)
 - [gh-pages](./Git/gh-pages.md)
 - [重新配置SSH](./Git/重新配置SSH.md)
+- 
