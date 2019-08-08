@@ -306,7 +306,8 @@ app.get("/keep", function (req, res) {
   * express只是把响应函数注册到该http.Server中了。  
   * 类似的，WebSocketServer也可以把自己的响应函数注册到http.Server中，  
   * 这样，同一个端口，根据协议，可以分别由express和ws处理：
-- WebSocket发送的仍然是
+- WebSocket发送的仍然是......(待补充)
+
 
 ## 参考
 - [编写聊天室](https://www.liaoxuefeng.com/wiki/1022910821149312/1103332447876608)
