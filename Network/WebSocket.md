@@ -34,11 +34,14 @@
     Sec-WebSocket-Protocol: chat
     ```
 ### 数据帧
-
-### API
+WebSocket 客户端、服务端通信的最小单位是 帧（frame），由 1 个或多个帧组成一条完整的 消息（message）。
+* 发送端：将消息切割成多个帧，并发送给服务端；
+* 接收端：接收消息帧，并将关联的帧重新组装成完整的消息；
 
 ### 连接保持+心跳
-  待补充
+WebSocket 为了保持客户端、服务端的实时双向通信，需要确保客户端、服务端之间的 TCP 通道保持连接没有断开。然而，对于长时间没有数据往来的连接，如果依旧长时间保持着，可能会浪费包括的连接资源。但不排除有些场景，客户端、服务端虽然长时间没有数据往来，但仍需要保持连接。这个时候，可以采用心跳来实现。
+- 发送方 ->接收方：ping
+- 接收方 ->发送方：pong
 
 ## 例子
 后端部分
@@ -308,6 +311,20 @@ app.get("/keep", function (req, res) {
   * 这样，同一个端口，根据协议，可以分别由express和ws处理：
 - WebSocket发送的仍然是......(待补充)
 
+## 问题
+### 和TCP、HTTP协议的关系
+- WebSocket 是基于 TCP 的独立的协议。它与 HTTP 唯一的关系是它的握手是由 HTTP 服务器解释为一个 Upgrade 请求。
+- WebSocket协议试图在现有的 HTTP 基础设施上下文中解决现有的双向HTTP技术目标；同样，它被设计工作在HTTP端口80和443，也支持HTTP代理和中间件，
+- HTTP服务器需要发送一个“Upgrade”请求，即101 Switching Protocol到HTTP服务器，然后由服务器进行协议转换。
+
+### Sec-WebSocket-Key/Accept 的作用
+前面提到了，Sec-WebSocket-Key/Sec-WebSocket-Accept 在主要作用在于提供基础的防护，减少恶意连接、意外连接。  
+作用大致归纳如下：
+- 避免服务端收到非法的 websocket 连接（比如 http 客户端不小心请求连接 websocket 服务，此时服务端可以直接拒绝连接）
+- 确保服务端理解 websocket 连接。因为 ws 握手阶段采用的是 http 协议，因此可能 ws 连接是被一个 http 服务器处理并返回的，此时客户端可以通过 Sec-WebSocket-Key 来确保服务端认识 ws 协议。（并非百分百保险，比如总是存在那么些无聊的 http 服务器，光处理 Sec-WebSocket-Key，但并没有实现 ws 协议。。。）
+- 用浏览器里发起 ajax 请求，设置 header 时，Sec-WebSocket-Key 以及其他相关的 header 是被禁止的。这样可以避免客户端发送 ajax 请求时，意外请求协议升级（websocket upgrade）
+- 可以防止反向代理（不理解 ws 协议）返回错误的数据。比如反向代理前后收到两次 ws 连接的升级请求，反向代理把第一次请求的返回给 cache 住，然后第二次请求到来时直接把 cache 住的请求给返回（无意义的返回）。
+- Sec-WebSocket-Key 主要目的并不是确保数据的安全性，因为 Sec-WebSocket-Key、Sec-WebSocket-Accept 的转换计算公式是公开的，而且非常简单，最主要的作用是预防一些常见的意外情况（非故意的）。
 
 ## 参考
 - [编写聊天室](https://www.liaoxuefeng.com/wiki/1022910821149312/1103332447876608)
