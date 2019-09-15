@@ -46,9 +46,6 @@
 ## Nginx
 - [基础](./Nginx/基础.md)
 
-## Plugins
-- [插件基础](./Plugins/插件基础.md)
-
 ## Git
 - [最小配置](./Git/最小配置.md)
 - [基础操作](./Git/基础操作.md)
