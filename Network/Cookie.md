@@ -13,13 +13,13 @@ HttpOnly | 加以限制，使 Cookie 不能被 JavaScript 脚本访问
 - 请求首部字段
 - 创建cookie时，可以设置6个部分：name（名称） value（值） expires（过期时间） path（路径） domain（域） secure（安全性） 后4个可选		  										
   * expires 默认是关闭浏览器后过期; 可另外设置过期时间,格式是： .toUTCString() ;
-  * 如6个月后过期：let expire = new Date(); expire.setMonth(expire.getMonth() + 6).toUTCString();													
-- 浏览器设置cookie：document.cookie = "UserName=csy;expires=" + expire+";"													
-- cookie不仅特定于某个web域，如www.aaa.com，还特定于该域中的具体路径，如：www.aaa.com/bbb/ ;     
-  若 www.aaa.com/bbb/ 中的页面设置了cookie，那么只有给目录或其子目录中的页面可以读取该cookie	    												
-  这是出于安全考虑，避免可以通过 www.aaa.com/用户/小明 获取到 www.aaa.com/用户/小刚 的cookie	  		  										
-  那么实现服务器上 www.aaa.com/用户/小明/买书 以及 www.aaa.com/用户/小明/买游戏 以及 www.aaa.com/用户/小明/结账 3个目录的cookie的互访呢？	  							
-- 可以设置第4个属性path： document.cookie = "UserName=csy;expires=Tue, 28 Dec 2020 00:00:00;path=/用户/小明"													
+  * 如6个月后过期：`let expire = new Date(); expire.setMonth(expire.getMonth() + 6).toUTCString();`  												
+- 浏览器设置`cookie：document.cookie = "UserName=csy;expires=" + expire+";"`													
+- cookie不仅特定于某个web域，如`www.aaa.com`，还特定于该域中的具体路径，如：`www.aaa.com/bbb/` ;     
+  若 `www.aaa.com/bbb/` 中的页面设置了cookie，那么只有给目录或其子目录中的页面可以读取该cookie	    												
+  这是出于安全考虑，避免可以通过 `www.aaa.com/用户/小明` 获取到 `www.aaa.com/用户/小刚` 的cookie	  		  										
+  那么实现服务器上 `www.aaa.com/用户/小明/买书` 以及 `www.aaa.com/用户/小明/买游戏` 以及 `www.aaa.com/用户/小明/结账` 3个目录的cookie的互访呢？	  							
+- 可以设置第4个属性path： `document.cookie = "UserName=csy;expires=Tue, 28 Dec 2020 00:00:00;path=/用户/小明"`													
 ```js
 function setCookie (name, value, expires, path) {													
   value = escape(value) // cookies 的值中有些字符是不被推荐的, 例如空格,标点, 所以需要转码					
