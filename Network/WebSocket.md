@@ -234,12 +234,12 @@ app.get("/keep", function (req, res) {
     这种方式是通过JSONP的方式来响应数据(Ajax方式是通过回调函数)
     ```
 ## 服务器发送事件(Server-Sent Event)
-> 服务器发送事件（以下简称SSE）是HTML 5规范的一个组成部分，可以实现服务器到客户端的单向数据通信。通过 SSE ，客户端可以自动获取数据更新，而不用重复发送HTTP请求。多用于视频，大文件下载(支持断线重连)。
-> SSE发送的不是一次性的数据包，而是一个数据流(连续不断的发送)  
-> SSE基于http，不像web socket一样是个新协议
-> 一旦连接建立，“事件”便会自动被推送到客户端。服务器端SSE通过 事件流(Event Stream) 的格式产生并推送事件。事件流对应的 MIME类型 为 text/event-stream ，包含四个字段：event、data、id和retry。event表示事件类型，data表示消息内容，id用于设置客户端 EventSource 对象的 last event ID string 内部属性，retry指定了重新连接的时间。  
-> SSE相对于轮询更加简便,更实时，
-> 但SSE只支持`支持服务器到客户端单向的事件推送`,且不支持IE
+> - 服务器发送事件（以下简称SSE）是HTML 5规范的一个组成部分，可以实现服务器到客户端的单向数据通信。通过 SSE ，客户端可以自动获取数据更新，而不用重复发送HTTP请求。多用于视频，大文件下载(支持断线重连)。
+> - SSE发送的不是一次性的数据包，而是一个数据流(连续不断的发送)  
+> - SSE基于http，不像web socket一样是个新协议
+> - 一旦连接建立，“事件”便会自动被推送到客户端。服务器端SSE通过 事件流(Event Stream) 的格式产生并推送事件。事件流对应的 MIME类型 为 text/event-stream ，包含四个字段：event、data、id和retry。event表示事件类型，data表示消息内容，id用于设置客户端 EventSource 对象的 last event ID string 内部属性，retry指定了重新连接的时间。  
+> - SSE相对于轮询更加简便,更实时，
+> - 但SSE只支持`支持服务器到客户端单向的事件推送`,且不支持IE
 - 例子(阮一峰)
   ```js
   var http = require("http");
