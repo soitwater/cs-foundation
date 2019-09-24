@@ -21,14 +21,14 @@
 
 ### 缓存
 - 强制缓存HTTP/1.1(Cache-Control)
-```js
-app.get('/getFile', function (req, res) {			
-  var txt = fs.readFileSync(path.resolve(__dirname, 'dist/file.txt'), 'utf-8');			
-  res.setHeader("Cache-Control", "public,max-age=600")	// 缓存	
-  res.send(txt);											
-});		
-```
-点击chrome浏览器控制台-Network，此时可以看到"size"显示为(from disk cache)  
+  ```js
+  app.get('/getFile', function (req, res) {			
+    var txt = fs.readFileSync(path.resolve(__dirname, 'dist/file.txt'), 'utf-8');			
+    res.setHeader("Cache-Control", "public,max-age=600")	// 缓存	
+    res.send(txt);											
+  });		
+  ```
+  点击chrome浏览器控制台-Network，此时可以看到"size"显示为(from disk cache)  
 
 - 协商缓存HTTP/1.0(Last-Modified)
   ```js
@@ -49,11 +49,6 @@ app.get('/getFile', function (req, res) {
     })											
   });		
   ```
-
-### 完整app.js
-```js
-
-```
 
 ## 参考
 - [Express使用进阶：cookie-parser中间件实现深入剖析](https://www.cnblogs.com/chyingp/p/express-cookie-parser-deep-in.html)
