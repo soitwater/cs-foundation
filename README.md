@@ -38,7 +38,6 @@
   * [WebSocket](./Network/WebSocket.md)
   * [ServiceWorkers](./Network/ServiceWorkers.md)
   * [长连接与短连接](./Network/长连接与短连接.md)
-  * [使用express进行练习](./Network/使用express进行练习.md)
 
 ## 数据库
 - [数据库基础](./数据库/数据库基础.md)

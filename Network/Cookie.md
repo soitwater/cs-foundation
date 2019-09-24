@@ -62,7 +62,21 @@ function getCookie (name) { // 获取Cookie的值, name是字段名
 - 用户禁用cookie 策略是放置一个测试cookie，之后获取它的值，测试是否禁用cookie													
 ```js
 setCookie("TestCookie", "Yes")													
-if (!getCookieValue("TestCookie"))  console.log("该用户已禁用cookie")													
+if (!getCookieValue("TestCookie"))  console.log("该用户已禁用cookie")											
 ```
 - 浏览器会限制 cookie 总数（一般50个），超出会删除；一般页面每个域最多也是20条cookie；每条cookie的携带值一般在4KB以内；													
 - 策略：把多条cookie信息，按一定顺序杂糅到一条cookie，如：setCookie("userDetail", "csy;44;10 Jan 2000")													
+
+
+## `Express`实现Cookie示例
+- npm i cookie-parser // 假如已经安装则不需要重复安装(因为是官方内置的)
+- ```js
+  const cookieParase = require('cookie-parser');
+  app.use(cookieParase())	// 解析cookie
+ 
+  app.use('/', function (req,res) {
+    console.log(req.headers.cookie); // 打印cookie
+    res.cookie('user', 'XiaoMing'); // 设置cookie(即给浏览器的响应首部字段中有 Set-Cookie:user=XiaoMing;)
+    res.send('succ')
+  })
+  ```
