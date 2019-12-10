@@ -8,7 +8,7 @@
 - 将`master`分支下的内容推送到`gh-pages`分支下：`git push origin master:gh-pages`
   * 其实在 github 页面上新建 默认分支时，`master`分支下的内容已经默认推送到`gh-pages`分支下
 - 假如`index.html`以及依赖的JS文件放在WebDemo仓库下的/Web/dist文件夹里，那么访问链接：  
-  `https://[github账户ID].github.io/WebDemo/Web/dist)`
+  `https://[github账户ID].github.io/[仓库名]/dist`
 - 补充github分支推送命令：  
   ```
   在新分支下
