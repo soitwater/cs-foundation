@@ -42,6 +42,7 @@
 ## 数据库
 - [数据库基础](./数据库/数据库基础.md)
 - [Redis](.//数据库/Redis.md)
+- [MySQL](.//数据库/MySQL.md)
   
 ## Nginx
 - [基础](./Nginx/基础.md)
