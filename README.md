@@ -1,20 +1,23 @@
-# 计算机基础知识笔记
+cs-foundation
 
 <details>
-  <summary>Git</summary>
-  
-- [gh-pages](./Git/gh-pages.md)
-- [场景操作](./Git/场景操作.md)
-- [基础操作](./Git/基础操作.md)
-- [多人集成](./Git/多人集成.md)
-- [持续集成](./Git/持续集成.md)
-- [最小配置](./Git/最小配置.md)
+  <summary>Electron</summary>
+
+- [Electron基础](./Electron/Electron基础.md)
 
 </details>
-  
+    
+<details>
+  <summary>Git</summary>
+
+- [场景操作](./Git/场景操作.md)
+- [基础操作](./Git/基础操作.md)
+
+</details>
+    
 <details>
   <summary>Network</summary>
-  
+
 - [CDN](./Network/CDN.md)
 - [Cookie](./Network/Cookie.md)
 - [HTTP](./Network/HTTP.md)
@@ -34,49 +37,45 @@
 - [长连接与短连接](./Network/长连接与短连接.md)
 
 </details>
-  
+    
 <details>
   <summary>Nginx</summary>
-  
-- [基础](./Nginx/基础.md)
+
+- [Nginx基础](./Nginx/Nginx基础.md)
 
 </details>
-  
+    
 <details>
   <summary>os</summary>
-  
+
 - [LRU_Cache](./os/LRU_Cache.md)
 - [MD5](./os/MD5.md)
 
 </details>
-  
+    
 <details>
   <summary>数据库</summary>
-  
+
 - [MySQL](./数据库/MySQL.md)
 - [Redis](./数据库/Redis.md)
 - [数据库基础](./数据库/数据库基础.md)
 
 </details>
-  
+    
 <details>
   <summary>算法</summary>
-  
+
 - [串](./算法/串.md)
 - [二叉树](./算法/二叉树.md)
 - [位运算](./算法/位运算.md)
 - [分治](./算法/分治.md)
 - [动态规划](./算法/动态规划.md)
 - [图](./算法/图.md)
-- [广度优先搜索](./算法/广度优先搜索.md)
-- [排列组合](./算法/排列组合.md)
+- [广度优先搜索与深度优先搜索](./算法/广度优先搜索与深度优先搜索.md)
 - [排序](./算法/排序.md)
-- [散列表](./算法/散列表.md)
 - [查找](./算法/查找.md)
-- [深度优先搜索](./算法/深度优先搜索.md)
 - [知识点](./算法/知识点.md)
-- [贪心](./算法/贪心.md)
 - [递归](./算法/递归.md)
 
 </details>
-  
+    
