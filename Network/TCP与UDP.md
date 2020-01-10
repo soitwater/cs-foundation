@@ -1,6 +1,5 @@
 # TCP
 ## OSI(Open Systems Interconncection，开放系统互联)网络分层
-从上到下分别是：
 - 应用层(Application)
 - 表示层(Presentation)
 - 会话层(Session)

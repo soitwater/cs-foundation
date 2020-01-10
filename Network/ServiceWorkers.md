@@ -1,5 +1,5 @@
 # ServiceWorkers
-丰富的离线体验，定期后台同步，推送通知 （一般这是原生app做的事）, Service Workers提供了这些功能的技术基础
+- 丰富的离线体验，定期后台同步，推送通知 （一般这是原生app做的事）, Service Workers提供了这些功能的技术基础
 
 ## 功能
 - service worker是一个脚本，由浏览器在背后默默地运行，独立于web页面。
@@ -77,11 +77,11 @@ dist/index.html
   </body>  
 </html>
 ```
-在浏览器输入url`chrome://inspect/#service-workers`可以检查service workers
+- 在浏览器输入url`chrome://inspect/#service-workers`可以检查service workers
 
 ## 问题
 ### 为什么不使用`Web Workers`
-Web Worker 是临时的，每次做的事情的结果还不能被持久存下来，如果下次有同样的复杂操作，还得费时间的重新来一遍。
+- Web Worker 是临时的，每次做的事情的结果还不能被持久存下来，如果下次有同样的复杂操作，还得费时间的重新来一遍。
 
 
 ## 参考
