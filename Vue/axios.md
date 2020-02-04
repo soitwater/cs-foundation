@@ -102,6 +102,24 @@ api.post("/select", urlencodedParser, (req, res) => {
 ## axios为请求添加token
 待补充
 
+## 中文
+- axios抓取中文(`GBK`)网页内容时,由于默认的编码是`utf8`,因此会出现乱码问题
+- 如果是在前端使用`axios`(而不是在`nodejs`端),那么可以`axios`将返回的数据转换为`blob`,再转换为`gbk`编码的`string`
+- 如果是在后端使用`axios`(`nodejs`端)
+  ```js
+  const iconv = require('iconv-lite')
+  axios({
+    method: 'get',
+    url: path,
+    responseType: 'arraybuffer'
+  }).then(res => {
+    let d = res.data
+    let d2 = iconv.decode(new Buffer(d), 'GBK')
+    console.log('内容??\n', d2)
+  })
+  ```
+
+
 ## 参考
 - [Jquery ajax, Axios, Fetch区别之我见](https://segmentfault.com/a/1190000012836882)
 - [中文文档](http://www.axios-js.com/zh-cn/docs/index.html)
