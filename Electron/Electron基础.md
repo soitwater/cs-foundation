@@ -7,6 +7,34 @@
 - `cd electron-quick-start`
 - `npm i && npm start`
 
+## 常用开发模块
+### 安装`cnpm i -D electron-is-dev` 判断当前是否开发环境
+* 在`main.js`
+  ```js
+  const isDev = require('electron-is-dev')
+  const urlLocation = isDev ? 'http://localhost:3000' : 'dummyurl'
+  mainWindow.loadURL(urlLocation)
+  ```
+### Electron防止频繁重启
+- 用cli方式开发时，修改程序入口文件（如main.js）时，常常需要重新`npm start`
+  * 可以安装`nodemon`,帮助完成重启项目
+  * 再修改`package.json`
+    ```json
+    "scripts": {
+      "start": "npx nodemon --watch main.js --exec \"electron .\""
+    }
+    ```
+### Electron启动时不自动打开浏览器
+- 启动时不自动打开浏览器
+  * cnpm i -D cross-env
+  * 在`package.json`
+    ```json
+    {
+      "scripts": {
+        "dev": "npx nodemon --watch main.js --exec \"electron .\" | cross-env BROWSER=none npm start"
+      }
+    }
+    ```
 ## React 中使用 Electron
 - `create-react-app`创建应用`my-preject`
 - `cd my-preject`
@@ -52,6 +80,8 @@
 - `main.js`文件有且仅有1个
 
 ## Electron与React的项目下使用NodeJS常用模块的配置项
+
+
 
 
 ## 参考
