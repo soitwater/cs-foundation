@@ -18,6 +18,12 @@ npm i -S antd
   * `import {Button} from 'antd' `
 
 ## form
+### input
+- antd的input组件获取其value的方式
+  * this.inputElement.state.value(`this.inputElement`是通过`ref`获取的)
+  * `e.target.value`
+- 在`input组件`的`onChange`事件中使用`setState`时获取`state`的值慢一拍,原因是`setState`是异步完成的,获取`state`时其实还没执行`setState`
+- `input`输入一个字符后会立即失焦,无法输入下一个字符,原因是触发了react重渲染(原因可能是`render`中存在`if-else`分支判断、hoc、循环key不固定唯一)
 ### 示例
 ```js
 import React, { Component } from 'react';
@@ -95,6 +101,10 @@ export default Form.create()(Doc2Readme)
   ```
 - 重置整个表单为默认值`this.props.form.resetFields()`
 
+
+## 重绘
+- `state`值改变时,`react`才会去检测是否`update`视图;局部变量`let`或者`const`改变时,即使`component`是根据他们来渲染的,react也不会`update`
+- 因此假如不希望触发重渲染,组件所绑定的数据应该用局部变量
 
 ## 参考
 - [ANTD 官方文档](https://ant.design/docs/react/introduce-cn)

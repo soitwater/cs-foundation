@@ -186,6 +186,21 @@
   ]
   ```
 
+## 令NodeJS支持ES-Module
+- `cnpm i @babel/core @babel/preset-env`
+- 根目录下创建`.babelrc`，并输入
+  ```json
+  {
+    "presets": [
+      ["@babel/preset-env", {
+        "targets": {
+          "node": "current"
+        }
+      }]
+    ]
+  }
+  ``` 
+
 ## 参考
 - [babel官网](https://www.babeljs.cn/)
 - [安装教程](https://www.babeljs.cn/setup#installation)

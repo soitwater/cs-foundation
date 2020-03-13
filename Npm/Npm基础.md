@@ -15,6 +15,17 @@
 6. 设置为默认源
    `npm config set registry http://registry.npmjs.org/`
 
+## 区别
+* npm与cnpm的区别
+ - cnpm装的各种node_module，这种方式下所有的包都是扁平化的安装。node_modules下展开后有非常多的文件，导致了在打包的过程中非常慢。
+ - 如果改用npm来安装node_modules的话，所有的包都是树状结构的，层级变深。
+ - 由于这个不同，对一些项目比较大的应用，很容易出现打包过程慢且node内存溢出的问题（使用npm安装包,可以加速`electron`打包）。
+* devDependencies与dependencies的区别
+ - dependencies 表示我们要在生产环境下使用该依赖，devDependencies 则表示我们仅在开发环境使用该依赖。
+ - 我自己的说法是,在自己写的代码中,用到了`import`或者`require`,就应该放到`dependencies`(`electron`除外)
+
+## NPX
+1. npx nodemon --version 查找局部安装的模块的版本
 
 ## 参考
 - [npm install --save 和 npm install -d的区别](https://blog.csdn.net/wangguoyu1996/article/details/80443861)
