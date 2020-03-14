@@ -201,7 +201,8 @@
   ```
 
 ## mock
-- `jest.fn()`功能：测试函数的参数,返回值,内部实现(只测试接口是否可用,不测试接口返回值)等
+- `jest.fn()`功能：测试函数的参数,测试函数返回值,改变函数内部实现(只测试接口是否可用,不测试接口返回值)等
+- 有时需要测试ajax请求等,但网络响应太慢等。因此可以把ajax请求换成(mock成)我们自定义的函数
   ```js
   // 被测文件
   export let runCallback = (fn) => {fn()}
@@ -224,12 +225,66 @@
     expect(func.mock.calls.length).toBe(2)
     // 测试函数`runCallback`的传入参数是否为 'yes'
     expect(func.mock.calls[0]).toEqual('yes')
-    // 测试函数`runCallback`的返回结果的第一个的值是`def`
+    // 测试函数`runCallback`第一次调用的返回结果的值是`def`
     expect(func.mock.results[0].value).toBe('def')
   })
   ```
 - 测试某接口是不是通的
   * 一般前端测试接口只需要测接口是否可用,而接口的返回数据这些是不管的
+  * mock其实是不管被测函数的具体实现的,只管函数是否被调用。特定的返回值可以手动返回
+  * `jest.fn(() => {})`相当于重写被测函数的具体实现
+  * `jest.fn.mockImplementationOnce(() => {})`效果同`jest.fn(() => {})`,但更适用于创建复杂行为的模拟功能的时候,这样多个函数调用产生不同的结果的时候
+    ```js
+    const myMockFn = jest
+      .fn()
+      .mockImplementationOnce(cb => cb(null, true))
+      .mockImplementationOnce(cb => cb(null, false));
+    // 第一次的调用
+    myMockFn((err, val) => console.log(val)); // > true
+    // 第二次的调用
+    myMockFn((err, val) => console.log(val)); // > false
+    ```
+- mock一个模块
+  ```js
+  // 一个模块通常有多个方法暴露,一个个单独 jest.fn() 耗费时间, jest.mock() 可以解决这个问题
+  jest.mock('模块名字或文件路径');
+  // 相当于
+  exports.fetchData = jest.fn();
+  exports.add = jest.fn();
+  exports.subtract = jest.fn();
+  exports.multiply = jest.fn();
+  ```
+
+  ```js
+  // 用法（测试文件）：上面的被mock的方法引入测试文件中
+  jest.mock('./func.js');
+  let fetchData = require('./func').fetchData;
+  test('should fetch data', () => {
+    fetchData.mockResolvedValue({ name: 'sam' });
+    return fetchData().then(res => {
+      expect(res).toEqual({ name: 'sam' })
+    })
+  })
+  ```
+- 下面3种mock的写法作用相同
+  ```js
+  jest.fn(cb => cb(null, true))
+  jest.fn().mockImplementationOnce(cb => cb(null, true))
+  jest.spyOn(对象, 对象上的一个方法名).mockImplementationOnce(cb => cb(null, true))
+  ```
+  ```js
+  // spyOn的好处是可以监听函数是否被调用而不mock函数
+  const math = require('./func');
+
+  test('should call add', () => {
+    function callMath(a, b) {
+      return math.add(a + b);
+    }
+    const addMock = jest.spyOn(math, 'add');
+    callMath(1, 2);
+    expect(addMock).toBeCalled();  // toBeCalled, 就是函数有没有被调用。
+  })
+  ```
 
 
 ## 配置
@@ -238,7 +293,90 @@
   * 测试覆盖率
   * 每次测试后自动清除
 
+## snapshot
+- 项目中经常有一些配置文件。比如
+  ```js
+  export const generateConfig  = () => {
+    return {
+      server: 'http://localhost',
+      port: '8080'
+    }
+  }
+  ```
+- 那测试它的测试用例可以这样写
+  ```js
+  import { generateConfig } from './snapshot.js'
+  test('测试 generateConfig', () => {
+    expect(generateConfig()).toEqual({
+      server: 'http://localhost',
+      port: '8080'
+    })
+  })
+  ```
+- 当配置项不断增加的时候，就需要不断去更改测试用例。那么我们可以这样写测试用例：
+  ```js
+  import { generateConfig } from './snapshot.js'
+  
+  test('测试 generateConfig', () => {
+    expect(generateConfig()).toMatchSnapshot()
+  })
+  // toMatchSnapshot() 会为expect 的结果做一个快照并与前面的快照做匹配。（如果前面没有快照那就保存当前生成的快照即可）
+  ```
+- 按`u`可以更新快照（先按`w`，当有多个快照报错时，可以选`i` 一个个更新快照）
+- 有一种情况，假设配置项中有随机数或者当前时间，如下。
+  ```js
+  export const generateConfig  = () => {
+    return {
+      server: 'http://localhost',
+      port: '8080',
+      time: new Date()
+    }
+  }
+  ```
+  那case 中snapshot 就需要使用expect.any() 了，如下
+  ```js
+  import { generateConfig } from './snapshot.js'
+  test('测试 generateConfig', () => {
+    expect(generateConfig()).toMatchSnapshot({
+      time: expect.any(Date)
+    })
+  })
+  ```
+- 之前使用snapshot 的时候，都会生成一个`__snapshot__`的文件。但它也支持`行内snapshot`。要使用行内snapshot ，我们需要在项目中安装`prettier`
+  ```s
+  npm install prettier@1.18.2
+  ```
+  然后，我们改一下测试用例
+  ```js
+  import { generateConfig } from "./snapshot.js";
+  test("测试 generateConfig", () => {
+    expect(generateConfig()).toMatchInlineSnapshot({
+      time: expect.any(Date)
+    });
+  });
+  ```
+  运行测试用例，会发现测试用例代码变成如下了。快照被保存到了测试代码中 
+  ```js
+  import { generateConfig } from "./snapshot.js";
+  test("测试 generateConfig", () => {
+    expect(generateConfig()).toMatchInlineSnapshot(
+      {
+        time: expect.any(Date)
+      },
+      `
+      Object {
+        "port": "8080",
+        "server": "http://localhost",
+        "time": Any<Date>,
+      }
+    `
+    );
+  })
+  ```
 
+## 
 
 ## 参考
 - [jest官网](https://jestjs.io/)
+- [jest-snapshot知识](https://blog.csdn.net/purple_lumpy/article/details/101110321)
+- [jest-mock](https://www.baidu.com/link?url=A7B15zB260yb5J1v_ZGoL6oxhQNkRSbFcmH5dkxNjjBXaImt7GkCRbKI8PFcshKaI73Ozxqo8G355gGNwNbnG_&wd=&eqid=e9445e8f0001a8c0000000065e6c2d6b)
