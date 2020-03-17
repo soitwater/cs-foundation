@@ -286,8 +286,44 @@
   })
   ```
 
+## mock timer
+- 对部分需要延时的函数，如`setTimeout(() => {}, 5000)`,我们测试时不一定需要真的等待5秒
+- 写法
+  ```js
+  // demo.js
+  export default (cb) => {
+    setTimeout(() => {
+      cb();
+      setTimeout(() => {
+        fn();
+      }, 2000);
+    }, 1000)
+  }
+  ```
+  ```js
+  // demo.test.js
+  import timer from './demo.js';
+  beforeEach(() => {
+    // 每个test前,jest的时间重设置为虚拟时间
+    jest.useFakeTimers();
+  })
+  test('test timer', () => {
+    const fn = jest.fn();
+    timer(fn);
+    // 快进1000毫秒
+    jest.advancedTimersByTime(1000);
+    // 函数已经被调用过
+    expect(fn).toHaveBeenCalledTimers(1);
+    // 继续快进1000毫秒(累加性质)
+    jest.advancedTimersByTime(1000);
+    expect(fn).toHaveBeenCalledTimers(1);
+  })
+  ```
 
-## 配置
+## 对DOM的测试
+- jest虽然在nodejs环境，但自身实现了一套DOM的api，故可以在jest操作dom
+
+## Jest配置
 - 执行`npx jest --init`,有以下选项,最后生成`jest.config.js`
   * 运行环境
   * 测试覆盖率
