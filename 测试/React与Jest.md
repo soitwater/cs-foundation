@@ -97,6 +97,7 @@
   })
   ```
 - `enzyme`使用`.simulate()`模拟事件
+- `enzyme`使用`.update()`更新组件(多用于`jest.mock('axios')`时)
 
 ## jest-enzyme
 - 使用jest-enzyme改进enjyme(更简洁的api/匹配器)
@@ -153,6 +154,7 @@
     )
   })
   ```
+
 
 ## 参考
 - [别人的听课笔记](https://www.dazhuanlan.com/2019/11/08/5dc4590109202/?__cf_chl_jschl_tk__=175d81ae7dc4536611eb27fc07cfd1b8bbe0d4ff-1584427427-0-ARRAsEZBMOgTxlMbespYW0dy4JG6eRlA5p0J029YMSWGQWjUoSGwVzrgmd-cRlbYHJ8G8zHrYubkD5DUj7ACEyYdvIBsbNzWhnmr8v_70rOJBEVmYMyGmEe8M3ETJmrbvy-VdpNH5_eCRk5jLN63bcvp50HCgVxUcBsWfCsWLjxqpzCvyrJS1bBeeZG0sR11exvSAH_E4VxoVARFqmAe8NJZkW4PD2wDJfA5D-QcHBWdr3bnEtQP8fx5xnErXRUV2I92fXREFDa7MP3dX9z4YnuPRl0jEgkqN8B6eAKkV5IUVFAhU2j2n1CA_fPpERPBcA)

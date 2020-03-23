@@ -254,7 +254,6 @@
   exports.subtract = jest.fn();
   exports.multiply = jest.fn();
   ```
-
   ```js
   // 用法（测试文件）：上面的被mock的方法引入测试文件中
   jest.mock('./func.js');
@@ -410,7 +409,7 @@
   })
   ```
 
-## 
+
 
 ## 参考
 - [jest官网](https://jestjs.io/)
