@@ -25,10 +25,7 @@
   * 解压——下载之后里面有使用方法的说明——或者[参考](https://blog.csdn.net/wangzy0327/article/details/78379496)
   * 第二种font class是：先在`main.js` 中 `import "./assets/styles/iconfont.css"` (路径自定义) —— 放好iconfont.css —— 在 iconfont.css 里有url 属性，已经说明了 iconfont.css 依赖哪些文件  
   * 第二种的使用：`<span class='iconfont icon-logo'></span> 或者 <span class='iconfont'>&#xe617;</span>` (编号在 iconfont.css 中查看)  
-  * 注意：之所以iconfont在下载icon之前会新建项目，是因为下载时，会把所有的icon都放在一份css中  
-- 重置ui库样式的方法
-  * F12检查元素，查看相关元素的在某状态下的样式时的类名，在ui库的index.css 中找到相关类名, 查找其样式 | 或在项目文件中, 重写其样式
-  * 注意：不要用到 `<style scoped>`
+  * 注意：之所以iconfont在下载icon之前会新建项目，是因为下载时，会把所有的icon都放在一份css中
 - iconfont 使用2（2019/12/16推荐）
   ```js
   1. 在官网项目里点击生成代码
@@ -127,7 +124,7 @@
 ## 伪元素
 - 修改css伪元素内容(before, after)
   * 添加`<style>`节点
-    ```css
+    ```js
     var css=function(t,s){
       s=document.createElement('style');
       s.innerText=t;

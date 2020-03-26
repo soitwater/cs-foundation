@@ -27,5 +27,9 @@
 ## NPX
 1. npx nodemon --version 查找局部安装的模块的版本
 
+## package.lock
+- 若没有`package.lock`, 则项目的依赖一直跟随最新版本,可能导致开发/生产环境的依赖不同(bug)
+- 建议项目带上`package.lock`
+
 ## 参考
 - [npm install --save 和 npm install -d的区别](https://blog.csdn.net/wangguoyu1996/article/details/80443861)

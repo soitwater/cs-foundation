@@ -13,12 +13,12 @@
    ```
 3. ```js
    function Person() {}
-   Person.prototype = {
-     add: function () {
-       alert(this.name);
-     },
-     name :"sy"
-   }
+     Person.prototype = {
+       add: function () {
+         alert(this.name);
+       },
+       name: "sy"
+     }
    var p2 = new Person();
    p2.add();//第一种情况：sy 不报错 
    
@@ -32,6 +32,7 @@
    };
    p2.add();//第2种情况：error
    
+
    // 区分以上两种情况：在创建实例之前，原型链是否已经修改?
    ```
 4. ```js
@@ -177,7 +178,7 @@
       var foo;							
       var foo=function foo() {					
         var x = foo();							
-        return “foobar”					
+        return 'foobar'					
         foo = function foo() {...}							
       };								
       return x;									
