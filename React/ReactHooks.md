@@ -2,7 +2,7 @@
 
 ## 为什么使用Hook
 - class式
-  * 组件常常需要在生命周期写重复代码,如每一个界面在`componentDidMount`去`localeStorage`去数据
+  * 组件常常需要在生命周期写重复代码,如每一个界面在`componentDidMount`取`localeStorage`的数据
   * `this`指向繁琐
 - 函数式
   * 没有生命周期，没有`state`

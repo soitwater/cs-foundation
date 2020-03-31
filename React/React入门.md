@@ -868,7 +868,7 @@ cnpm i -S styled-components
   ```js
   // 在 src/router/index.js
   import loadable from '../util/loadable'
-  const Home = loadable(()=>import('@pages/home'))
+  const Home = loadable(()=>import('@/pages/home'))
   const Routes = () => (
     <BrowserRouter>
       <Route path="/home" component={Home}/>
@@ -877,11 +877,6 @@ cnpm i -S styled-components
   
   export default Routes
   ```
-
-## 问题
-- react 没有 ui 方式 创建项目？？
-- react 集成 webpack，并使用链式写法吗？？
-- react 动态import
 
 ## this.props.children 实现插槽
 - 插槽
