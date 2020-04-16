@@ -46,9 +46,11 @@ JS是一门编译语言，而不是一门解释语言
   ```
 
 ## 函数作用域的含义：														
-属于这个函数的全部变量都可以在整个函数的范围内使用及复用(事实上在嵌套的作用域中也可以使用)													
+- 
+- 属于这个函数的全部变量都可以在整个函数的范围内使用及复用(事实上在嵌套的作用域中也可以使用)													
 														
-## JS中利用函数中嵌套函数，实现"私有"函数，体现了软件中的"最小暴露原则"														
+## 最小暴露原则
+- JS中利用函数中嵌套函数，实现"私有"函数，体现了软件中的"最小暴露原则"														
 														
 ## 区分函数声明和表达式最简单的方法
 是看 function 关键字出现在声明中的位置（不仅仅是一行代码，而是整个声明中的位置）。  
@@ -310,12 +312,7 @@ process(someReallyBigData) // 这里数据比较大, 处理时会占用很高的
 var btn = document.getElementById( "my_button" )														
 btn.addEventListener( "click", function click (evt) {														
 console.log("button clicked") // click() 不会调用到 someReallyBigData														
-}, false )														
-														
-// 按理,process(someReallyBigData)执行完后,应该释放 someReallyBigData,空出内存														
-// 但是,因为 btn.addEventListener 监听函数 click(event)														
-// click(event) 会一直监听，且因为闭包, 引擎觉得在 click(event) 函数外的变量也可能随时会被使用, 														
-// 因此 someReallyBigData 不会被释放														
+}, false )																							
 														
 														
 console.log(a) // undefined														

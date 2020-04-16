@@ -62,7 +62,7 @@ ES6：const a1 = [1, 2];  const a2 = [… a1]
 let arr = [[1]] 
 let re=[]; 
 for(let i=0;i<arr.length;i++) { 
-  let [...arr1]=arr;
+  let [...arr1]=arr[i];
   re.push(arr1); 
 }
 ```

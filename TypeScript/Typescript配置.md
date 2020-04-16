@@ -1,4 +1,4 @@
-# 配置
+# Typescript配置
 
 ## 安装
 ```
@@ -17,7 +17,7 @@ tsc -v
   ```
   文件夹：js      编译之后生成的JavaScript文件存放的文件夹
   文件夹：ts      TypeScript源码文件存放的文件夹
-  tsconfig.json  TypeScript编译配置文件
+  tsconfig.json   TypeScript编译配置文件
   ```
 
 - tsconfig.json
@@ -53,11 +53,9 @@ tsc -v
   var a:string = "HelloWorld"
   console.log(a)
   ```
-- 运行  
-  * 方式一：使用IDE  
-    如VS Code直接： 终端/运行任务
-  * 命令行  
-    `tsc -p tsconfig.json`
+- 运行(更新配置信息)  
+  * 方式一：使用IDE: 如VS Code直接： 终端/运行任务
+  * 命令行: `tsc -p tsconfig.json`
 
 ## tsconfig.json
 配置翻译
