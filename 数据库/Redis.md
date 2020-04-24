@@ -9,7 +9,8 @@
 - 应用场景：取最新N个数据，取Top N个数据，实时消息系统，缓存
 
 ## 安装
-
+- 下载地址`https://github.com/microsoftarchive/redis/releases`
+- 
   
 ## 参考
 - [《Redis实战》]()

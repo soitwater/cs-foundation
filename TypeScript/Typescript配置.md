@@ -12,6 +12,9 @@ tsc -v
   npm init -y
   tsc --init
   npm install @types/node --dev-save
+
+  // 运行程序
+  tsc 文件路径/文件名
   ```
 - 目录结构
   ```

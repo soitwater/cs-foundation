@@ -1,5 +1,8 @@
 # stream
 
+- 与`buffer`的区别
+  * buffer是拿到数据后放进缓冲区，缓冲区满了再一次性把数据拿出去处理
+  * stream是拿到数据就处理，适用于大文件读取处理
 - nodejs的核心模块，基本上都是stream的的实例，比如process.stdout、http.clientRequest。
   ```js
   const fs = require('fs');
