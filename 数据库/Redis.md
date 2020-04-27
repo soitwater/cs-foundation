@@ -10,7 +10,21 @@
 
 ## 安装
 - 下载地址`https://github.com/microsoftarchive/redis/releases`
-- 
+- 解压
+- 启动临时服务`./redis-server.exe  ./redis.windows.conf`(不会在window的服务列表中出现)
+- 双击`redis-cli.exe`,出现窗口,在窗口内可执行数据库操作
   
+## 基本使用
+### redis.windows.conf修改配置
+- `port 6379` change to `port 6378`
+- 数据库密码`requirepass 123456`（登录时输入`auth 123456`）
+- 设置`key`--`set keyA 111`;获取`key`--`get keyA`
+- `KEYs *`查找所有`key`
+- `DEL keyA`删除`key`
+- 在nodejs中使用`redis`:`cnpm i -D ioredis`,address:`https://www.npmjs.com/package/ioredis`
+
+
+
 ## 参考
 - [《Redis实战》]()
+- [redis安装](https://blog.csdn.net/yangwenxue1989/article/details/88884668)
