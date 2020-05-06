@@ -364,7 +364,7 @@ ReactDOM.render(
   * `react-router`框架源码里为每一组件增加路由属性就是这个方法
   * [官方文档](https://zh-hans.reactjs.org/docs/render-props.html#___gatsby)
   * 官方例子
-    ```js
+    ```java
     class Cat extends React.Component {
       render() {
         const mouse = this.props.mouse;
@@ -571,13 +571,17 @@ ReactDOM.render(
 ### 常用
 - 生命周期函数：在运行到某一时刻组件会自动调用的函数
 - ![生命周期](../assets/lifecircle.png)
+  
 - `componentWillMount()` 在渲染前调用,在客户端也在服务端。
-- `componentDidMount()` : 在第一次渲染后调用，只在客户端。之后组件已经生成了对应的DOM结构(已经渲染过了)，可以通过this.getDOMNode()来进行访问。 
+- `componentDidMount()` : 在第一次渲染后调用，只在客户端。之后组件已经生成了对应的DOM结构(已经渲染过了)，可以通过this.getDOMNode()来进行访问。
+- `componentWillUnmount()`在组件从 DOM 中移除之前立刻被调用。
+   
 - `componentWillReceiveProps(newPops)` 在组件接收到一个新的 prop (更新后)时被调用。这个方法在初始化render时(第一次存在于父组件中)不会被调用。
+  
 - `shouldComponentUpdate(newPops, newState)` 返回一个布尔值。在组件接收到新的props或者state时被调用。在初始化时或者使用forceUpdate时不被调用。 
 - `componentWillUpdate(newPops, nextState)`在组件接收到新的props或者state但还没有render时被调用。在初始化时不会被调用。
 - `componentDidUpdate(prevProps, prevState)` 在组件完成更新后立即调用。在初始化时不会被调用。
-- `componentWillUnmount()`在组件从 DOM 中移除之前立刻被调用。
+  
 ### 父组件渲染时,若无必要,子组件不渲染
 - 在子组件添加生命周期回调
   ```js

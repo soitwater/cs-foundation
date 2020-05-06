@@ -1,8 +1,8 @@
 # String
 ```js
  'abc'.charAt(1)	
- 'ab'.charCodeAt(1)	返回'b'的字符编码（'a'的字符编码是97）
- 'abc'.slice(0,2)	裁剪，同数组的操作方式 (同`substr`(按长度截) `substring`(按索引截取))
+ 'abc'.charCodeAt(1)	返回'b'的字符编码（'a'的字符编码是97）
+ 'abc'.slice(0,2)	裁剪，同数组的操作方式 (同`substr(start, length)`(按长度截) `substring(start, index)`(按索引截取))
  'abc'.indexOf('a')	
  'abc'.lastIndexOf('a')	
  'abc'.trim()	
