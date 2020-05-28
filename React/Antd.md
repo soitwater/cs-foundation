@@ -5,6 +5,10 @@
 npm i -S antd
 ```
 
+## 应用
+- 注意在`index.jss`引入`import 'antd/dist/antd.css';`
+- 参考`https://ant.design/docs/react/getting-started-cn`
+
 ## 使用(按需加载)
 - `npm run eject`暴露出`webpack`配置文件
 - 安装

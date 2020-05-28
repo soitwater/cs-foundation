@@ -89,7 +89,7 @@
         console.log(i);
       }
     }();
-    add();
+    add(); // 1
     ```
     - 代码中哪几个变量没有被回收？——第2个 i，var add,  add() 中的 i
     - 首先是全局变量中的i，第二行的声明会忽略，但赋值会覆盖掉第一行，因此只有1个。
@@ -209,9 +209,9 @@
       var a = 100
       fn ('zhangsan') // 'zhangsan' 20
       function fn (name) {
-       age = 20
-       console.log (name,age)
-       var age
+        age = 20
+        console.log (name,age)
+        var age
       }
       ```
 23. 内置对象9个  
@@ -219,11 +219,11 @@
 24. this指向
     ```js
     var b = function(){		
-        alert(this.a); 		
+      alert(this.a); 		
     },		
     obj = {		
-        a:1,		
-        b:b // 把函数独立出来 		
+      a:1,		
+      b:b // 把函数独立出来 		
     };		
     var fun = obj.b;// 存储的是内存中的地址		
     fun();		

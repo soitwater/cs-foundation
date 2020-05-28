@@ -1,11 +1,11 @@
 # Redux入门
 
-## 安装
-```
+## 安装  
+```shell
 npm install --save redux
 npm install --save react-redux
 ```
-另外需要安装谷歌的扩展插件`redux devtools`以及`react Developer Tools`
+另外需要安装谷歌的扩展插件`redux devtools`以及`react Developer Tools`  
 ```js
 // 还需要配置 createState(), 允许谷歌浏览器使用 redux devtools
 const store = createStore(

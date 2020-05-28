@@ -114,7 +114,7 @@ console.log(str1.replace(regexp1, "year $1")) // year 2012,year 2011
 String方法：
 正则表达式常与 split()  replace( ) search( ) match( )
 search()返回找到的位置;  // 参数是正则表达式,返回的是位置,找不到则返回 -1
-search()只找一个，类似inddexOf()
+search()只找一个，类似indexOf()
 match(正则)以数组形式返回找到的所有文本
 replace(正则表达式, 要替换的字符串)
 

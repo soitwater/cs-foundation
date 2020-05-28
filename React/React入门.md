@@ -828,6 +828,7 @@ cnpm i -S styled-components
     ```
     
 ## react-loadable
+- 也可以参考`React.lazy()`
 - 做代码分割，即懒加载用的
 - [参考链接](https://www.jianshu.com/p/871de188adf6)
 - 普通使用方法
@@ -856,9 +857,9 @@ cnpm i -S styled-components
   
   //通用的过场组件
   const loadingComponent =()=>{
-      return (
-          <div>loading</div>
-      ) 
+    return (
+      <div>loading</div>
+    ) 
   }
   
   //过场组件默认采用通用的，若传入了loading，则采用传入的过场组件
@@ -883,6 +884,7 @@ cnpm i -S styled-components
   ```
 
 ## this.props.children 实现插槽
+- `this.props`对象的属性与组件的属性一一对应，但是有一个例外，就是`this.props.children`属性。它表示组件的`所有子节点`。
 - 插槽
   ```js
   <Content style={{background: '#f00'}}>
