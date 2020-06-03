@@ -468,6 +468,7 @@
 - 先后触发：`routeChangeStart; beforeHistoryChange; routeChangeComplete`
 - 报错触发: `routeChangeError`
 - 监听方式：`Router.events.on(eventName, callback)`
+- 解除监听：`Router.events.off(eventName, callback)`
 
 
 ## 异步加载
@@ -542,7 +543,7 @@ const configs = {
     mySecret: 'secret',
     secondSecret: process.env.SECOND_SECRET,
   },
-  // 在服务端渲染和客户端渲染都可获取的配置
+  // 在服务端渲染和客户端渲染都可获取的配置(键值自定义,一般用于定义全局变量)
   publicRuntimeConfig: {
     staticFolder: '/static',
   },
@@ -556,7 +557,7 @@ if (typeof require !== 'undefined') {
 module.exports = withCss(configs)
 ```
 
-## 服务端渲染liuc
+## 服务端渲染
 - 浏览器请求：
   * 浏览器发起`/page`请求
   * Koa接收到请求，并调用`Next.js`
@@ -588,6 +589,157 @@ module.exports = withCss(configs)
     }
   </script>
   ```
+
+## HOC封装`store`
+- 服务端渲染时，服务端与客户端的`store`是各自不同的，应想办法令两者一致，因此需要
+  * 每次请求服务端的时候（页面初次进入，页面刷新），`store` 重新创建。
+  * 前端路由跳转的时候，`store` 复用之前创建好的。
+  * 这种判断不能写在每个组件的 `getInitialProps` 里，需抽象出来。
+- 步骤
+  * 新建`store/store.js`:不再直接暴露出 store 对象，而是暴露一个创建 store 的方法，并且允许传入初始状态来进行初始化
+    ```js
+    import { createStore, applyMiddleware } from 'redux'
+    import ReduxThunk from 'redux-thunk'
+
+    const initialState = {
+      count: 0,
+    }
+
+    function reducer(state = initialState, action) {
+      switch (action.type) {
+        case 'add':
+          return {
+            count: state.count + 1,
+          }
+          break
+
+        default:
+          return state
+      }
+    }
+
+    export default function initializeStore(state) {
+      const store = createStore(
+        reducer,
+        Object.assign({}, initialState, state),
+        applyMiddleware(ReduxThunk)
+      )
+      return store
+    }
+    ```
+  * 在`lib`目录下新建`with-redux-app.js`，我们决定用这个`hoc`来包裹`_app.js`里导出的组件，每次加载`app`都要通过我们这个`hoc`
+    ```js
+    import React from 'react'
+    import initializeStore from '../store/store'
+
+    const isServer = typeof window === 'undefined'
+    const __NEXT_REDUX_STORE__ = '__NEXT_REDUX_STORE__'
+
+    function getOrCreateStore(initialState) {
+      if (isServer) {
+        // 服务端每次执行都重新创建一个store
+        return initializeStore(initialState)
+      }
+      // 在客户端执行这个方法的时候 优先返回window上已有的store
+      // 而不能每次执行都重新创建一个store 否则状态就无限重置了
+      if (!window[__NEXT_REDUX_STORE__]) {
+        window[__NEXT_REDUX_STORE__] = initializeStore(initialState)
+      }
+      return window[__NEXT_REDUX_STORE__]
+    }
+
+    export default Comp => {
+      class withReduxApp extends React.Component {
+        constructor(props) {
+          super(props)
+          // getInitialProps创建了store 这里为什么又重新创建一次？
+          // 因为服务端执行了getInitialProps之后 返回给客户端的是序列化后的字符串
+          // redux里有很多方法 不适合序列化存储
+          // 所以选择在getInitialProps返回initialReduxState初始的状态
+          // 再在这里通过initialReduxState去创建一个完整的store
+          this.reduxStore = getOrCreateStore(props.initialReduxState)
+        }
+
+        render() {
+          const { Component, pageProps, ...rest } = this.props
+          return (
+            <Comp
+              {...rest}
+              Component={Component}
+              pageProps={pageProps}
+              reduxStore={this.reduxStore}
+            />
+          )
+        }
+      }
+
+      // 这个其实是_app.js的getInitialProps
+      // 在服务端渲染和客户端路由跳转时会被执行
+      // 所以非常适合做redux-store的初始化
+      withReduxApp.getInitialProps = async ctx => {
+        const reduxStore = getOrCreateStore()
+        ctx.reduxStore = reduxStore
+
+        let appProps = {}
+        if (typeof Comp.getInitialProps === 'function') {
+          appProps = await Comp.getInitialProps(ctx)
+        }
+
+        return {
+          ...appProps,
+          initialReduxState: reduxStore.getState(),
+        }
+      }
+
+      return withReduxApp
+    }
+    ```
+  * 在`_app.js`中引入`hoc`
+    ```js
+    import App, { Container } from 'next/app'
+    import 'antd/dist/antd.css'
+    import React from 'react'
+    import { Provider } from 'react-redux'
+    import Layout from '../components/Layout'
+    import initializeStore from '../store/store'
+    import withRedux from '../lib/with-redux-app'
+    class MyApp extends App {
+      // App组件的getInitialProps比较特殊
+      // 能拿到一些额外的参数
+      // Component: 被包裹的组件
+      static async getInitialProps(ctx) {
+        const { Component } = ctx
+        let pageProps = {}
+
+        // 拿到Component上定义的getInitialProps
+        if (Component.getInitialProps) {
+          // 执行拿到返回结果`
+          pageProps = await Component.getInitialProps(ctx)
+        }
+
+        // 返回给组件
+        return {
+          pageProps,
+        }
+      }
+
+      render() {
+        const { Component, pageProps, reduxStore } = this.props
+        return (
+          <Container>
+            <Layout>
+              <Provider store={reduxStore}>
+                {/* 把pageProps解构后传递给组件 */}
+                <Component {...pageProps} />
+              </Provider>
+            </Layout>
+          </Container>
+        )
+      }
+    }
+
+    export default withRedux(MyApp)
+    ```
 
 ## 参考
 - [nextJS搭建环境](https://cloud.tencent.com/developer/article/1612742)

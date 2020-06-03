@@ -11,7 +11,9 @@
 ## 安装
 - 下载地址`https://github.com/microsoftarchive/redis/releases`
 - 解压
-- 启动临时服务`./redis-server.exe  ./redis.windows.conf`(不会在window的服务列表中出现)
+
+## 启动
+- （命令行）启动临时服务`./redis-server.exe  ./redis.windows.conf`(不会在window的服务列表中出现)
 - 双击`redis-cli.exe`,出现窗口,在窗口内可执行数据库操作
   
 ## 基本使用

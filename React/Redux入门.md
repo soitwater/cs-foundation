@@ -13,6 +13,7 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()  
 );
 ```
+- `react-redux`是高阶组件,用于监听`store`的变化
 
 ## 写法
 - 目录

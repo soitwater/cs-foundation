@@ -440,7 +440,7 @@ ReactDOM.render(
         /*里面可以渲染对应的内容*/
       </Provider>
 
-      // Consumer - 消费者,消费Consumer所提供的数据
+      // Consumer - 消费者,消费生产者所提供的数据
       // 一般嵌套在生产者下
       // 若单独使用，则之只能消费到`React.createContext(/*默认的共享数据*/);`这里的`默认的共享数据`
       <Consumer>

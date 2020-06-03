@@ -29,6 +29,7 @@
 - useState  useReducer
 - useEffect  useLayoutEffect
 - useMemo  useCallback
+- useContext
 
 ## useState
 - 例子
@@ -252,6 +253,9 @@
 - useEffect 不会阻塞浏览器的绘制任务，它会在页面更新之后才执行。
 - 而 `useLayoutEffect` 跟 `componentDidMount` 和 `componentDidUpdate` 的执行时机(调用阶段)一样，会阻塞页面渲染，如果当中有耗时任务的话，页面就会卡顿。
 - 大多数情况下`useEffect` 比 `class 的生命周期函数`性能更好，我们应该优先使用`useEffect`,再尝试`useLayoutEffect`。
+
+## useContext
+
 
 ## 自定义Hook
 - 将组件逻辑提取到可重用的函数中
