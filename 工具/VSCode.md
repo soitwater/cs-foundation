@@ -4,9 +4,21 @@
 - [2018 vscode 前端最佳配置](https://blog.csdn.net/win7583362/article/details/79315055/)
 
 ## 推荐的插件
-- import cost
+- import cost (显示导入的包的大小)
 - GitLens
-- 
+- Chinese (Simplified) Language Pack for Visual Studio Code
+- Code Runner (不用再`node a.js`了)
+- Markdown All in One
+- WakaTime (统计过去七天的写码时间)
+- Bracket Pair Colorizer 用不同颜色高亮显示匹配的括号
+- Version Lens 工具包最新版本信息
+- vscode-icons 改变文件夹的icons
+### cpp插件
+- cmake cpp的多文件编译
+- C/C++
+- C++ Intellisense 智能提示
+- CMake Tools 扩展CMake
+  
 
 ## 个人配置(eslint 换行符)
 ```json
@@ -51,6 +63,13 @@
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "workbench.sideBar.location": "left",
+    // 终端样式
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.lineHeight": 1.2,
+    "terminal.integrated.letterSpacing": 0.1,
+    "terminal.integrated.fontSize": 15, 
+    "terminal.integrated.fontFamily": "Lucida Console", 
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", // 使用 powershell(ctrl+shift+p,输入shell,选择,可以选择其他shell)
 }
 ```
 

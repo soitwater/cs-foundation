@@ -2,6 +2,7 @@
 - 参考：https://uniapp.dcloud.io/collocation/pages?id=tips-tabbar
 ```json
 {
+  // “page” 的第一项会是小程序的启动页
 	"pages": [{
 		"path": "pages/index/index",
 		"style": {
@@ -22,7 +23,9 @@
     // 小程序名字
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#007AFF",
-		"backgroundColor": "#FFFFFF"
+		"backgroundColor": "#FFFFFF",
+    // 允许下拉
+    "enablePullDownRefresh":true
 	},
   // 如果应用是一个多 tab 应用，可以通过 tabBar 配置项指定 tab 栏的表现，以及 tab 切换时显示的对应页
   // tabbar 的页面展现过一次后就保留在内存中，再次切换 tabbar 页面，只会触发每个页面的onShow，不会再触发onLoad
