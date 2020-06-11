@@ -68,6 +68,19 @@
         "text": "写作"
       }
     ]
+  },
+  // 启动模式配置，仅开发期间生效，用于模拟直达页面的场景，如：小程序转发后，用户点击所打开的页面（因为小程序不能通过输入url到达其他页面）
+  "condition": { //模式配置，仅开发期间生效
+    "current": 0, //当前激活的模式（list 的索引项）
+    "list": [{
+        "name": "swiper", //页面名称
+        "path": "pages/component/swiper/swiper", //启动页面，必选
+        "query": "interval=4000&autoplay=false" //启动参数，在页面的onLoad函数里面得到。
+      }, {
+        "name": "test",
+        "path": "pages/component/switch/switch"
+      }
+    ]
   }
 }
 ```
