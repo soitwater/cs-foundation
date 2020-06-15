@@ -1,6 +1,7 @@
 # 终端terminus
 - 这是Electron应用
-  
+- 内存占用`400MB`起步(远高于`git for window`与`powerShell`)  
+
 ## 安装
 * 下载git for windows并安装:https://gitforwindows.org/
 * 下载terminus并安装, 官方下载地址 Terminus(portable.zip版是win10的):  https://github.com/Eugeny/terminus/releases/tag/v1.0.112
