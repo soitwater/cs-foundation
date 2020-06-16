@@ -46,6 +46,7 @@
     "jetbrainsKeymap.promptV3Features": true,
     "editor.multiCursorModifier": "ctrlCmd",
     "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
     "editor.tabSize": 2,
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -56,20 +57,33 @@
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-
     "window.zoomLevel": -1,
     "explorer.confirmDelete": false,
-    "git.enabled": false,
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "workbench.sideBar.location": "left",
-    // 终端样式
+    "python.jediEnabled": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "files.associations": {
+        "*.logo": "logo",
+        "*.nlogo": "logo"
+    },
+    "workbench.tree.indent": 16,
+    "workbench.iconTheme": "vscode-icons",
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.lineHeight": 1.2,
     "terminal.integrated.letterSpacing": 0.1,
-    "terminal.integrated.fontSize": 15, 
-    "terminal.integrated.fontFamily": "Lucida Console", 
-    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", // 使用 powershell(ctrl+shift+p,输入shell,选择,可以选择其他shell)
+    "terminal.integrated.fontSize": 15, //字体大小设置
+    "terminal.integrated.fontFamily": "Lucida Console",
+    "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    // "terminal.integrated.shell.windows": "E:\\terminus\\Terminus.exe",
+    "terminal.integrated.automationShell.linux": "",
+    "editor.fontSize": 17,
+    "markdown.preview.fontSize": 16,
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Chromium, IndentWidth: 2}",
+    "editor.fontLigatures": null, //字体设置
 }
 ```
 
