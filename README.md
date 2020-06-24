@@ -3,6 +3,7 @@
 <details>
   <summary>C++</summary>
 
+- [安装](./C++/安装.md)
 - [语法](./C++/语法.md)
 
 </details>
@@ -28,7 +29,9 @@
 - [div左右分成两半且为不同颜色](./CSS/div左右分成两半且为不同颜色.md)
 - [flex弹性盒子](./CSS/flex弹性盒子.md)
 - [Grid布局](./CSS/Grid布局.md)
+- [IFC与GFC与FFC](./CSS/IFC与GFC与FFC.md)
 - [requestAnimationFrame](./CSS/requestAnimationFrame.md)
+- [SASS与SCSS](./CSS/SASS与SCSS.md)
 - [scoped原理](./CSS/scoped原理.md)
 - [Stylus](./CSS/Stylus.md)
 - [SVG](./CSS/SVG.md)
@@ -94,10 +97,13 @@
 </details>
     
 <details>
-  <summary>Git</summary>
+  <summary>Git与Github与Bash</summary>
 
-- [场景操作](./Git/场景操作.md)
-- [基础操作](./Git/基础操作.md)
+- [Gist](./Git与Github与Bash/Gist.md)
+- [Github的OAuth](./Git与Github与Bash/Github的OAuth.md)
+- [场景操作](./Git与Github与Bash/场景操作.md)
+- [基础操作](./Git与Github与Bash/基础操作.md)
+- [终端terminus](./Git与Github与Bash/终端terminus.md)
 
 </details>
     
@@ -127,6 +133,13 @@
 - [所有标签](./HTML/所有标签.md)
 - [点击外部关闭弹窗](./HTML/点击外部关闭弹窗.md)
 - [特殊标签](./HTML/特殊标签.md)
+
+</details>
+    
+<details>
+  <summary>Java</summary>
+
+- [Java基础](./Java/Java基础.md)
 
 </details>
     
@@ -162,7 +175,7 @@
 - [事件委托](./JavaScript/事件委托.md)
 - [事件捕获与事件冒泡](./JavaScript/事件捕获与事件冒泡.md)
 - [交集并集差集](./JavaScript/交集并集差集.md)
-- [你不知道的JS上](./JavaScript/你不知道的JS上.md)
+- [函数参数的值传递与引用传递](./JavaScript/函数参数的值传递与引用传递.md)
 - [创建10个a标签点击的时候弹出来对应的序号](./JavaScript/创建10个a标签点击的时候弹出来对应的序号.md)
 - [创建数组](./JavaScript/创建数组.md)
 - [原型与原型链](./JavaScript/原型与原型链.md)
@@ -211,7 +224,6 @@
 - [HTTP](./Network/HTTP.md)
 - [HTTPS](./Network/HTTPS.md)
 - [HTTP状态码](./Network/HTTP状态码.md)
-- [HTTP请求方法](./Network/HTTP请求方法.md)
 - [HTTP首部](./Network/HTTP首部.md)
 - [IP](./Network/IP.md)
 - [ServiceWorkers](./Network/ServiceWorkers.md)
@@ -264,6 +276,7 @@
 - [ENV环境变量](./Npm/ENV环境变量.md)
 - [Npm发布](./Npm/Npm发布.md)
 - [Npm基础](./Npm/Npm基础.md)
+- [npm找包的顺序](./Npm/npm找包的顺序.md)
 
 </details>
     
@@ -279,6 +292,7 @@
   <summary>React</summary>
 
 - [Antd](./React/Antd.md)
+- [NextJS](./React/NextJS.md)
 - [React-webpack](./React/React-webpack.md)
 - [ReactHooks](./React/ReactHooks.md)
 - [ReactRouter](./React/ReactRouter.md)
@@ -298,7 +312,22 @@
 <details>
   <summary>TypeScript</summary>
 
-- [配置](./TypeScript/配置.md)
+- [TS与React组件](./TypeScript/TS与React组件.md)
+- [TS报错](./TypeScript/TS报错.md)
+- [Typescript基础](./TypeScript/Typescript基础.md)
+- [Typescript常用工具](./TypeScript/Typescript常用工具.md)
+- [Typescript配置](./TypeScript/Typescript配置.md)
+
+</details>
+    
+<details>
+  <summary>uni-app</summary>
+
+- [package_json配置](./uni-app/package_json配置.md)
+- [uni-app基础](./uni-app/uni-app基础.md)
+- [样式](./uni-app/样式.md)
+- [登录](./uni-app/登录.md)
+- [组件](./uni-app/组件.md)
 
 </details>
     
@@ -385,9 +414,7 @@
 <details>
   <summary>前端工程</summary>
 
-- [npm找包的顺序](./前端工程/npm找包的顺序.md)
 - [onload和DOMContentLoaded的区别](./前端工程/onload和DOMContentLoaded的区别.md)
-- [性能监控](./前端工程/性能监控.md)
 - [模块化](./前端工程/模块化.md)
 - [登录](./前端工程/登录.md)
 - [百度统计](./前端工程/百度统计.md)
@@ -444,6 +471,7 @@
 - [函数节流与防抖](./浏览器与性能优化/函数节流与防抖.md)
 - [回流与重绘](./浏览器与性能优化/回流与重绘.md)
 - [性能优化](./浏览器与性能优化/性能优化.md)
+- [性能监控](./浏览器与性能优化/性能监控.md)
 - [浏览器渲染原理](./浏览器与性能优化/浏览器渲染原理.md)
 
 </details>
@@ -498,6 +526,7 @@
 
 - [JavaScript权威指南](./阅读/JavaScript权威指南.md)
 - [JavaScript语言精粹](./阅读/JavaScript语言精粹.md)
+- [你不知道的JS上](./阅读/你不知道的JS上.md)
 
 </details>
     
@@ -505,7 +534,9 @@
   <summary>面试</summary>
 
 - [HR面](./面试/HR面.md)
+- [前端面试题目](./面试/前端面试题目.md)
 - [技术面](./面试/技术面.md)
+- [智力题](./面试/智力题.md)
 
 </details>
     
