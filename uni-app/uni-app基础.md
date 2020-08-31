@@ -16,5 +16,8 @@
 - manifest.json: 小程序，安卓等相关配置
 - pages.json: 打包存放位置、图片资源位置等
 
+## 新建页面
+- 在`pages`页面直接右键`新建页面`
+
 ## 教程
 - [`悦读`小程序](http://www.hcoder.net/course/info_246.html)

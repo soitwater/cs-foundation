@@ -9,7 +9,7 @@
   * npm install babel-preset-es2015 --save-dev
   * npm i @babel/preset-env -D
   * 在项目根目录创建`.babelrc`
-    ```
+    ```js
     {
       "presets": [["@babel/preset-env", { "modules": false }]],
       "plugins": [
@@ -48,6 +48,8 @@
 - Element-ui支持主体定制,例如改变主题颜色之类的。
 
 ## 表格
+- `el-table-column`里写入`type='index'`自动排序(编号)
+- `el-table-column`里的`prop`的值，是允许这么写的`detail.profile.name`
 - 为第一行添加样式
   ```html
   <el-table

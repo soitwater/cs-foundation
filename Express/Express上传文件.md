@@ -51,33 +51,33 @@ uploadFile: data => axios.create({headers:{'Content-Type':'multipart/form-data'}
 在express中可用express-formidable ，可用于处理表单和上传文件，功能大而全,支持4种content-type类型，可配置项非常多，最大的区别是还提供了一个对象,用于处理各种事件
   ```js
   app.post('/uploadFile', urlencodedParser, function (req, res) {										
-  // 表单 										
-  var form = new formidable.IncomingForm()										
-  let targetPath = path.join(dataSavePath) // 文件的保存路径										
-  form.uploadDir = targetPath										
-  // 下面的方法是异步的？且作用是将获取表单数据--将文件保存到本地										
-  form.parse(req, function(err, fields, files) {										
-    if (err) {										
-      console.log ("获取用户名参数失败 --> \n",err)									
-      throw Error("获取用户名参数失败")									
-    }									
-										
-    let oldName = oldName = files.file.path // 临时的文件的 绝对路径 + 文件名 （无扩展后缀）									
-    let newName = fields.fileId // 新的文件名（无扩展后缀）									
-    let oldpath = path.join(oldName)									
-    let extname = path.extname(files.file.name);									
-    let newpath = path.join(targetPath, "/" + newName + extname)										
-    // 改名									
-    fs.rename(oldpath, newpath, function(err) {										
-      if(err) {										
-        console.log ('改名错误\n  ', err)									
-        throw Error("改名失败")									
-      }										
-      res.send(successSign)									
+    // 表单 										
+    var form = new formidable.IncomingForm()										
+    let targetPath = path.join(dataSavePath) // 文件的保存路径										
+    form.uploadDir = targetPath										
+    // 下面的方法是异步的？且作用是将获取表单数据--将文件保存到本地										
+    form.parse(req, function(err, fields, files) {										
+      if (err) {										
+        console.log ("获取用户名参数失败 --> \n",err)									
+        throw Error("获取用户名参数失败")									
+      }									
+                      
+      let oldName = oldName = files.file.path // 临时的文件的 绝对路径 + 文件名 （无扩展后缀）									
+      let newName = fields.fileId // 新的文件名（无扩展后缀）									
+      let oldpath = path.join(oldName)									
+      let extname = path.extname(files.file.name);									
+      let newpath = path.join(targetPath, "/" + newName + extname)										
+      // 改名									
+      fs.rename(oldpath, newpath, function(err) {										
+        if(err) {										
+          console.log ('改名错误\n  ', err)									
+          throw Error("改名失败")									
+        }										
+        res.send(successSign)									
+      })										
     })										
   })										
-})										
-```
+  ```
 
 ## 上传模块
 待补充（结合个人项目）

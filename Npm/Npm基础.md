@@ -14,6 +14,9 @@
    `npm config set registry https://registry.npm.taobao.org`
 6. 设置为默认源
    `npm config set registry http://registry.npmjs.org/`
+7. 快速修改Nodejs全局包的放置位置
+   - `npm config ls`
+   - `npm config set prefix E:/路径`
 
 ## 区别
 * npm与cnpm的区别

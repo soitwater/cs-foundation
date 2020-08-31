@@ -1,6 +1,7 @@
 # async & await
 - async & await 是对Promise 语法的进一步优化
-
+- 一旦有一个函数用了`async`, 那么调用这个函数的`函数`最好也加上`async`
+  
 ## async
 - 强制函数 return Promise 对象  
 - return 1 会被包装成`return Promise.resolve(1)`

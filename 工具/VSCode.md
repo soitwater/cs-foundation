@@ -6,6 +6,7 @@
 ## 推荐的插件
 - import cost (显示导入的包的大小)
 - GitLens
+- Git history diff (`更推荐`, 与`GitLens`互斥)
 - Chinese (Simplified) Language Pack for Visual Studio Code
 - Code Runner (不用再`node a.js`了)
 - Markdown All in One

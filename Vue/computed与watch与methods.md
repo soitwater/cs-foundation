@@ -99,6 +99,7 @@ export default {
         this.a = val.age + " 岁"
         this.b = val.grade.chinese + "/" + val.grade.math + "/" + val.grade.english
       },
+      // 开销会变大，因为`student`下的每一属性都会被添加`监听`
       deep: true
     }
   },
@@ -120,11 +121,11 @@ export default {
 
 ## 区别
 
-区别|形式|本质|场景|写法|位置  
--|-|-|-|-|-
-methods|function|function|逻辑方法处理|null|null
-computed|function|data|多个数据影响一个数据|null|本质是 Vue 实例的 data 对象，用于 {{}} 或 v-bind
-watch|function|function|一个数据影响多个数据|null|null
+| 区别     | 形式     | 本质     | 场景                 | 写法 | 位置                                             |
+| -------- | -------- | -------- | -------------------- | ---- | ------------------------------------------------ |
+| methods  | function | function | 逻辑方法处理         | null | null                                             |
+| computed | function | data     | 多个数据影响一个数据 | null | 本质是 Vue 实例的 data 对象，用于 {{}} 或 v-bind |
+| watch    | function | function | 一个数据影响多个数据 | null | null                                             |
 
 ## 参考
 - [vue中methods、watch、computed之间的差别对比以及适用场景](https://www.cnblogs.com/widgetbox/p/8954162.html)

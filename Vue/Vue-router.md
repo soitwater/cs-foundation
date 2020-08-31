@@ -128,10 +128,10 @@
   * 编程式路由
   * 命名路由和命名视图
 ### 动态路由匹配
-模式                           |匹配路径|             $route.params
--|-|-
-/user/:username                |/user/evan          | {username: 'evan'}
-/user/:uername/post/:post_id   |/user/evan/post/123 | {username:'evan', post_id:123}
+| 模式                         | 匹配路径            | $route.params                  |
+| ---------------------------- | ------------------- | ------------------------------ |
+| /user/:username              | /user/evan          | {username: 'evan'}             |
+| /user/:uername/post/:post_id | /user/evan/post/123 | {username:'evan', post_id:123} |
 - 使用：
   ```js 
   （1）在router/index.js里，添加一个路由：
@@ -388,6 +388,7 @@ export default {
 }
 ```
 
+
 ## 模板
 ```js
 import Vue from 'vue'
@@ -431,6 +432,20 @@ new Vue({
   render: h => h(App),
 }).$mount('#app')
 ```
+
+## 三级路由 & 二级路由
+- 路由`<router-view />`最好是绝对定位
+- 三级路由(在`router.js`中三级路由在二级路由的`children`内)应在二级路由组件(vue文件)内存在`<router-view />`
+  ```js
+  <template>
+    <div>
+      <span>二级路由内容</span>
+      <!--三级路由-->
+      <router-view />
+    </div>
+  </template>
+  ```
+
 
 ## 参考
 - [官方文档](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E7%BB%84%E4%BB%B6%E5%86%85%E7%9A%84%E5%AE%88%E5%8D%AB)
