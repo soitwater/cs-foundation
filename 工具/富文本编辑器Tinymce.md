@@ -54,6 +54,9 @@ export default {
 - 发现富文本编辑器的每段文本都有`<p>`包裹
 - 新建一个div,div内插入`<p>`(p即富文本编辑器里所输入的所有内容),这是`<p>`里的转义字符什么的都会被浏览器自动转义(不用你操心),再遍历div里的p的属性`innerHTML`的`length`即可完成
 
+## image
+- 貌似一行只能放一张`<img />`, 多张图片最好换行
+
 ## 参考
 - [在 Vue 项目中引入 tinymce 富文本编辑器](https://www.cnblogs.com/wisewrong/p/8985471.html)
 - [tinymce 5更新后，如何使用tinymce-vue](https://segmentfault.com/a/1190000018358304?utm_source=tag-newest)
