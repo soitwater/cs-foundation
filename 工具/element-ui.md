@@ -123,6 +123,96 @@
         }]
       }
       ```
+- 表格合并
+  ```js
+  <el-table
+    class="common-table"
+    :data="tableData"
+    height="600"
+    :span-method="objectSpanMethod"
+    border
+  >
+    <el-table-column prop="module" align="center" label="模块"></el-table-column>
+    <el-table-column prop="permission" label="功能权限">
+      <template slot-scope="scope">
+        <el-checkbox v-model="checkboxVal[scope.$index]">{{scope.row.permission}}</el-checkbox>
+      </template>
+    </el-table-column>
+  </el-table>
+
+  data() {
+    return {
+      tableData: [
+        { id: 1, module: "运营看板", permission: "概览" },
+        { id: 1, module: "运营看板", permission: "客诉分析" },
+        { id: 1, module: "运营看板", permission: "设备画像" },
+        { id: 1, module: "运营看板", permission: "用户画像" },
+        { id: 2, module: "客户定制", permission: "客户列表" },
+        { id: 2, module: "客户定制", permission: "APP列表" },
+        { id: 2, module: "客户定制", permission: "APP更新" },
+        { id: 2, module: "客户定制", permission: "内容列表" },
+        { id: 2, module: "客户定制", permission: "APP语言列表" },
+        { id: 2, module: "客户定制", permission: "APP语言资源" },
+        { id: 2, module: "客户定制", permission: "APP语言代码" },
+        { id: 3, module: "设备系统", permission: "设备列表" },
+        { id: 3, module: "设备系统", permission: "固件升级" },
+        { id: 3, module: "设备系统", permission: "表盘列表" },
+        { id: 3, module: "设备系统", permission: "表盘资源" },
+        { id: 3, module: "设备系统", permission: "表盘分类" },
+        { id: 3, module: "设备系统", permission: "设备语言列表" },
+        { id: 3, module: "设备系统", permission: "设备语言资源" },
+        { id: 3, module: "设备系统", permission: "设备语言代码" },
+        { id: 4, module: "后台配置", permission: "常见问题列表" },
+        { id: 4, module: "后台配置", permission: "常见问题分组" },
+        { id: 4, module: "后台配置", permission: "H5模板" },
+        { id: 4, module: "后台配置", permission: "消息配置" },
+        { id: 5, module: "售后支持", permission: "用户反馈列表" },
+      ],
+      checkboxVal: [],
+      spanArr: [], // 第 i 个元素表示当前的 tableData[i] 他会占据几行, 0 表示不显示
+    }
+  }
+
+  mounted: {
+    this.gormatTableData(this.tableData);
+    this.checkboxVal = new Array(this.tableData.length).fill(false);
+  }
+
+  methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const _row = this.spanArr[rowIndex];
+        const _col = _row > 0 ? 1 : 0;
+        return {
+          rowspan: _row,
+          colspan: _col,
+        };
+      }
+    },
+    gormatTableData(data) {
+      let spanArr = this.spanArr;
+      // pos 表示当前的 spanArr 的索引(会占据多行的那个位置)
+      let pos = 0;
+      for (let i = 0; i < data.length; i++) {
+        if (i === 0) {
+          // tableData[0] 必然占据一行
+          spanArr.push(1);
+          pos = 0;
+        } else {
+          // 判断当前元素与上一个元素是否相同
+          if (data[i].id === data[i - 1].id) {
+            spanArr[pos] += 1;
+            spanArr.push(0);
+          } else {
+            this.spanArr.push(1);
+            pos = i;
+          }
+        }
+      }
+    },
+  }
+  ```
+
   
 ## NavMenu
 - handleSelect 点击切换页面

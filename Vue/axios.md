@@ -15,7 +15,83 @@
 - 移除拦截器的写法
   ```js
   let myRequestInterceptor = axios.interceptors.request.use(function () {})
-  axios.interceptors.request.eject(myRequestInterceptor)
+  axios.interceptors.request.eject(myRequestInterceptor) // 引入
+  ```
+- 自定义拦截器设置
+  ```js
+  // 新增时，用这个axios (地址, 传递的数据, 是否application/json)
+  export function addAxios(url, data, isJson = true) {
+    let headers = { "Authorization": getToken() };
+    isJson ? (headers['Content-Type'] = 'application/json') : 1;
+    let a = axios.create({ headers });
+    a.interceptors.response.use(
+      (res) => {
+        let { message, status } = res.data;
+        let url = res.config.url;
+        Vue.prototype.$notify({
+          title: "新增反馈",
+          message: ' [' + status + '] ' + message,
+          type: status === 200 ? 'success' : 'warning',
+          customClass: "my-el-notify"
+        })
+        return res;
+      },
+      (error) => {
+        if (error.response) {
+          showErrorMsg(error, 'add');
+        } else {
+          return Promise.reject(error);
+        }
+      }
+    );
+    return a.post(url, data);
+  }
+  
+  // 删除时，使用这个 (地址, 传递的数据, 是否application/json)
+  export function deleteAxios(url, data) {
+    axios.interceptors.response.handlers = [];
+    axios.interceptors.response.use(
+      (res) => {
+        let { message, status } = res.data;
+        let url = res.config.url;
+        Vue.prototype.$message({
+          showClose: true,
+          message: status === 200 ? '删除成功.' : '删除失败.',
+          type: status === 200 ? 'success' : 'warning',
+        })
+        return res;
+      },
+      (error) => {
+        // return Promise.reject(error);
+      }
+    );
+    let req = axios({
+      headers: {
+        "Authorization": getToken(),
+      },
+      method: "post",
+      url,
+      params: data
+    });
+    axios.interceptors.response.handlers = [];
+    return req;
+  }
+  ```
+
+## 拦截器捕获错误信息应这么处理
+- axios发送post请求返回400状态码，请求失败，code非200
+- 其实是返回的错误信息有问题, 应该这样子捕获错误信息
+  ```js
+  .catch(error => {
+    // 这里的error输出的不是一个对象【error.response才是一个对象】
+    console.log(error);
+    if (error.response) {
+      // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+      console.log( error.response.data );
+      console.log( error.response.status );
+      console.log( error.response.headers );
+    }
+  })
   ```
 
 ## 常用配置

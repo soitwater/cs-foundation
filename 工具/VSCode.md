@@ -14,6 +14,7 @@
 - Bracket Pair Colorizer 用不同颜色高亮显示匹配的括号
 - Version Lens 工具包最新版本信息
 - vscode-icons 改变文件夹的icons
+- bracket pair colorizer 括号高亮
 ### cpp插件
 - cmake cpp的多文件编译
 - C/C++
@@ -100,3 +101,17 @@
 ## 其他设置
 - `chcp 65001`设置控制台编码为`utf8`
 - `chcp 936`设置控制台编码为`gbk2312`(简体中文)
+- vscode自动将CRLF转换成LF
+  * 下载vs code插件：`EditorConfig for VS Code`
+  * 在项目目录下新建文件：`.editorconfig`
+  * 在文件中添加以下内容, 搞定
+    ```
+    root = true
+    
+    [*]
+    charset = utf-8
+    indent_style = space
+    indent_size = 2
+    end_of_line = lf
+    insert_final_newline = true
+    ```
