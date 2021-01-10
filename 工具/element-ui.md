@@ -123,6 +123,20 @@
         }]
       }
       ```
+- 表单验证的`*`号的位置
+  ```css
+  .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before, .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:after {
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+  }
+
+  .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before, .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {
+    content: '';
+    color: #F56C6C;
+    margin-right: 4px;
+  }
+  ```
 - 表格合并
   ```js
   <el-table
