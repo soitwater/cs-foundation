@@ -57,5 +57,33 @@
 - flex:none等同于flex:0 0 auto；
 - flex:auto等同于flex:1 1 auto
 
+## `flex: 1;`表示什么
+```html
+<div class="container">
+  <div class="div">我是一个div</div>
+  <div class="div">我是一个很多字div</div>
+  <div class="div">我是一个更多字而且第三个div</div>
+</div>
+<style>
+.container{
+  display: flex;
+}
+.div{
+  border: 1px solid red;
+  flex: 1;
+}
+</style>
+```
+```js
+这是完整写法, 详见mdn, 它还有另外两种完整写法, 分别是 initial (0 1 auto) 和 none (0 0 auto)
+
+第一个参数表示: flex-grow 定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大
+第二个参数表示: flex-shrink 定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小
+第三个参数表示: flex-basis给上面两个属性分配多余空间之前, 计算项目是否有多余空间, 默认值为 auto, 即项目本身的大小
+
+表示`.container`元素将其子元素按行`等分`
+```
+
+
 ## 参考: 
 - [写给自己看的display: flex布局教程](https://www.zhangxinxu.com/wordpress/2018/10/display-flex-css3-css/)

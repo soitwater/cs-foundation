@@ -1,6 +1,9 @@
 # SASS与SCSS
 - SASS严格缩进，SCSS是带括号的
 
+## 插件
+- 在vscode中使用插件`live sass compiler`
+  
 ## 基础
 - 变量：`$value: 10px;`
 - 嵌套与作用域
