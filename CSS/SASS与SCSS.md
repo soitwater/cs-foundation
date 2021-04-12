@@ -2,11 +2,16 @@
 - SASS严格缩进，SCSS是带括号的
 
 ## 插件
-- 在vscode中使用插件`live sass compiler`
+- 在vscode中使用插件`live sass compiler`(学习sass用的,用于将sass代码转化为普通的css代码)
   
 ## 基础
-- 变量：`$value: 10px;`
+- 变量：`$value: 10px + 6px;`
 - 嵌套与作用域
+
+### 引入文件
+- sass中通常将`变量`都写在一个单独的文件内,
+- 这个文件的命名方式是`下划线 + 名字.scss`，这里的下划线表示这个文件是私有文件,不会被编译成`css`文件
+- 其他同路径文件引用这个文件：` @import 'viriables'; `(不需要下划线,即使原文件下有`_下划线`)
 
 
 ### Minins
@@ -38,6 +43,56 @@
     @include button(green);  
   }
   ```
+- 媒体查询与mixin的配合
+  ```css
+  @mixin ipad {
+    @media screen and (min-width: 768px) {
+      /* 相当于占位符 */
+      @content;
+    }
+  }
+
+  .header {
+    width: 1000px;
+    @include ipad {
+      width: 500px;
+    }
+  }
+  .footer {
+    color: blue;
+    @include ipad {
+      color: red;
+    }
+  }
+  ```
+  * 上面的scss代码会变成下面的代码
+    ```css
+    .header {
+      width: 1000px;
+    }
+
+    @media screen and (min-width: 768px) {
+      .header {
+        width: 500px;
+      }
+    }
+    .footer {
+      color: blue;
+    }
+
+    @media screen and (min-width: 768px) {
+      .footer {
+        color: red;
+      }
+    }
+    ```
+  
+
+### sass预定义函数
+- lighten
+  * 如:`color:lighten(#f00, 20%);`颜色将变浅20%
+- darken
+  * 与`lighten`同理,颜色变深
 
 ### 函数
 - 格式

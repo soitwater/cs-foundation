@@ -276,5 +276,391 @@
   </style>
   ```
 
+## ref | reactive | readonly | toRefs 
+```html
+<template>
+  <!--4. 不需要用name.value; 因为vue内部做了处理-->
+  <div>name: {{name}}</div>
+  <div>科目: {{course.title}}; 分数: {{course.score}};</div>
+  <div>只读科目: {{readonlyCourse.title}}; 分数: {{readonlyCourse.score}};</div>
+  <div>科目: {{toRefCourseTitle}}; 分数: {{toRefCourseScore}};</div>
+</template>
+
+<script>
+// 1. ref 与 reactive 是将普通数据变成响应式数据(原理:通过proxy对数据进行封装,当数据变化时,触发模板等内容的更新)
+// 1. ref 是处理基础类型数据; reactive 处理引用型数据
+// 1. 用于替代vue2中的data语法
+// 1. readonly(参数) 返回一个只读代理, 传入的参数是ref()对象或者reactive()对象, 对象内部嵌套的属性也是只读的
+// 1. toRefs 可以让 reactive的proxy的对象数据中,解构出来的值,也变成 响应式的数据
+import { ref, reactive, readonly, toRefs } from 'vue';
+
+export default {
+  // 0. created 之前执行(无法使用this, 因为当前实例未创建)
+  setup(props, context) {
+    // 2. proxy, 'dell'会变成proxy({value: 'dell'}), 不然基础类型不能被proxy
+    let name = ref('dell');
+    setTimeout(() => {
+      // 3. 要操作name的值, 需要用name.value
+      name.value = 'lee';
+    }, 2000);
+
+    // 5. reactive 是对`对象类型`数据的proxy响应式引用, 包括数组
+    const course = reactive({
+      title: '数学',
+      score: '100',
+    });
+    setTimeout(() => {
+      course.score = '120';
+    }, 2000);
+
+    // 6. readonly 传入的参数是ref()或者reactive()对象
+    const readonlyCourse = readonly(reactive({ title: '语文', score: '100', }));
+    // 6. 无法修改, 会被阻止
+    setTimeout(() => {
+      readonlyCourse.score = '140';
+    }, 2000);
+
+    const toRefCourse = reactive({ title: '英语', score: '100' });
+    // 7. toRefs 是将 proxy({title: '英语'}) 转化为 { title: proxy({value: '英语'}) }
+    let { title: toRefCourseTitle, score: toRefCourseScore } = toRefs(toRefCourse);
+    setTimeout(() => {
+      // 7. 使用 `toRefCourseScore = '160';` 无效, 打印下  `console.log('1732', toRefCourseScore)`就知道原因了
+      toRefCourse.score = '160';
+    }, 2000);
+
+    return {
+      name,
+      course,
+      readonlyCourse,
+      toRefCourseTitle,
+      toRefCourseScore,
+    }
+  }
+}
+</script>
+```
+
+## toRef | context
+### toRef的使用
+```html
+<template>
+  <div>name: {{ name}}</div>
+  <div>age: {{ age}}</div>
+  <div>money: {{ money}}</div>
+</template>
+
+<script>
+import { reactive, toRefs, toRef } from 'vue';
+
+export default {
+
+  setup(props, context) {
+    const data = reactive({ name: 'dell' });
+    // 1. name可以被会获取,因为data中有name键
+    const { name } = toRefs(data);
+    // 1. age不能被获取,因为data中没有age键,toRefs也不会自动为data创建age键
+    const { age } = toRefs(data);
+    // 1. money能获取, toRef表示尝试在data中获取money键;若money不存在,会创建money键
+    const money = toRef(data, 'money');
+
+    return {
+      name, age, money
+    }
+  }
+}
+</script>
+```
+### context
+- 父组件
+  ```html
+  <template>
+    <!--3. -->
+    <HelloWorld @change-val="handleChange">
+      <span>父组件</span>
+    </HelloWorld>
+  </template>
+
+  <script>
+  import HelloWorld from './components/HelloWorld.vue';
+
+  export default {
+    components: {
+      HelloWorld,
+    },
+    methods: {
+      handleChange() {
+        alert('on-change-val');
+      }
+    }
+  }
+  </script>
+  ```
+- 子组件
+```html
+<template>
+  <!--3. -->
+  <div @click="handleClick">子组件</div>
+</template>
+
+<script>
+import { h } from 'vue';
+export default {
+  setup(props, context) {
+    const { attrs, slots, emit } = context;
+    // 1. attrs是父组件传入的none-props属性
+    console.log(attrs);
+    // 1. slots是父组件, slots.default()返回的是一个virtualDOM
+    console.log(slots);
+    // 1. 
+    console.log(emit);
+    // 2. 如果setup()返回的不是对象,而是一个render函数,那么该组件的`<template>`失效,使用的是render()函数
+    // return () => h('div', {}, ['123456']);
+    // return () => h('div', {}, slots.default());
+
+    // 3. 效果等同于this.$slots.emit('change-val)
+    function handleClick() {
+      emit('change-val');
+    }
+
+    // 3. 
+    return {
+      handleClick
+    }
+  }
+}
+</script>
+```
+
+## computed
+```html
+<template>
+  <div @click='addCount'>count: {{count}}</div>
+  <div>countAddFive: {{countAddFive}}</div>
+  <div>countAddFiveByGetSet: {{countAddFiveByGetSet}}</div>
+</template>
+
+<script>
+// 1. computed
+import { ref, computed } from 'vue'
+
+const countRelativeEffect = () => {
+  let count = ref(0);
+  const addCount = () => { count.value++; };
+  // 1. computed 接收一个回调函数
+  const countAddFive = computed(() => count.value + 5);
+  // 2. computed 还能接收一个[[GET]] [[SET]]
+  let countAddFiveByGetSet = computed({
+    // 2. 获取countAddFiveByGetSet 时使用这一get 回调
+    get: () => count.value + 5,
+    // 2. [[SET]] 不需要加return; 表示设置countAddFiveByGetSet时将执行的回调
+    set: () => { count.value = 10 },
+  });
+  setTimeout(() => {
+    // 2. 此时count === 10, countAddFive === 15, countAddFiveByGetSet === 15
+    countAddFiveByGetSet.value = 100;
+  }, 2000);
+
+  return { count, countAddFive, countAddFiveByGetSet, addCount };
+};
+
+export default {
+  setup(props, context) {
+    const { count, countAddFive, countAddFiveByGetSet, addCount } = countRelativeEffect();
+    return { count, countAddFive, countAddFiveByGetSet, addCount };
+  }
+}
+</script>
+```
+
+## watch | watchEffect
+```html
+<template>
+  <input type="text" v-model='name' />
+  <div>name: {{name}}</div>
+  <div>watchName: {{watchName}}</div>
+  <div>watchNameObj: {{watchNameObj}}</div>
+  <div>name: {{name}}</div>
+</template>
+
+<script>
+// 1. watch, watchEffect
+import { ref, reactive, watch, watchEffect, toRefs } from 'vue'
+
+const nameRelativeEffect = () => {
+  let nameObj = reactive({ name: '' });
+  let { name } = toRefs(nameObj);
+  let watchName = ref('');
+  let watchNameObj = ref('');
+  // 1. 懒惰性: 首次页面渲染完成,声明变量name 的时候不执行watch 的回调
+  watch(name, (newVal, oldVal) => { watchName.value = `new(${newVal}), old(${oldVal})`; });
+  // 2. 监听nameObj的name, 需要写成`() => nameObj.name`, 而不是`nameObj.name`
+  watch(() => nameObj.name, (newVal, oldVal) => { watchNameObj.value = `new(${newVal}), old(${oldVal})`; });
+  // 3. watch 还可以监听一个数组, 第一个参数是个数组, 第二个参数是个回调函数, 回调函数的参数是2个数组
+  watch([name, () => nameObj.name], ([newName, oldName], [newNameobjName, oldNameobjName]) => {
+    console.log('watch 监听数组', [newName, oldName], [newNameobjName, oldNameobjName])
+  }, {
+    // 6. 令watch失去惰性,进入页面时即立即执行,和`watchEffect`一样
+    immediate: true,
+  });
+  // 4. watchEffect 接收的参数少于 watch, 只需要传递一个回调函数
+  // 4. watchEffect 不能拿到之前的`值`,只能拿到数据的新值
+  // 4. watchEffect不是惰性执行的, 页面加载的第一次就会执行(immediate)
+  // 4. watchEffect 会自动去找回调函数中的哪些参数存在对外部的依赖,自动监听这些对外部依赖
+  const stopWatchEffect = watchEffect(() => {
+    console.log('watchEffect: ', name.value, nameObj.name);
+  });
+  // 5. 5秒后,清除watchEffect,不再进行监听
+  // 5. watch的停止方式同理, 将watchEffect|watch 赋值给一变量, 执行`变量()`即可
+  setTimeout(() => {
+    stopWatchEffect();
+  }, 5000);
+  return { name, watchName, watchNameObj };
+};
+
+export default {
+
+  setup(props, context) {
+    const { name, watchName, watchNameObj } = nameRelativeEffect();
+    return { name, watchName, watchNameObj };
+  }
+}
+</script>
+```
+
+## 新生命周期
+```html
+<template>
+  <div>你好,{{name}}!</div>
+</template>
+
+<script>
+import {
+  onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted,
+  onRenderTracked, onRenderTriggered, ref
+} from 'vue'
+export default {
+  setup(props, context) {
+    const name = ref('小明');
+    setTimeout(() => { name.value = '小红' }, 3000);
+
+    // Composition API 中没有 created|beforeCreated
+    onBeforeMount(() => console.log('lifecycle: onBeforeMount'));
+    onMounted(() => console.log('lifecycle: onMounted'));
+    onBeforeUpdate(() => console.log('lifecycle: onBeforeUpdate'));
+    onUpdated(() => console.log('lifecycle: onUpdated'));
+    onBeforeUnmount(() => console.log('lifecycle: onBeforeUnmount'));
+    onUnmounted(() => console.log('lifecycle: onUnmounted'));
+    // 当页面渲染后,vue会重新收集响应式依赖;页面刚进入时, 会触发onRenderTracked
+    onRenderTracked(() => console.log('lifecycle: onRenderTracked'));
+    // 当页面冲新渲染之后触发onRenderTracked; 每次触发 onRenderTriggered 之后都会触发 onRenderTracked
+    onRenderTriggered(() => console.log('lifecycle: onRenderTriggered'));
+
+    return { name };
+  }
+}
+</script>
+```
+
+## provide | inject
+- 在父组件
+  ```html
+  <template>
+    <HelloWorld></HelloWorld>
+  </template>
+
+  <script>
+  import HelloWorld from './components/HelloWorld.vue';
+
+  // 1. 引入
+  import { ref, provide, readonly } from 'vue';
+
+
+
+  const nameRelativeEffect = () => {
+    let name = ref('小明');
+    // 1. 为所有的子孙组件传递数据`obj`
+    // 1. provide 在 setup() 下的写法
+    // 1. readonly 限制子孙组件不能修改参数name
+    provide('name', readonly(name));
+    provide('changeName', function (val) {
+      console.log('进入 provide', val)
+      name.value = val;
+    });
+  }
+  export default {
+    components: { HelloWorld },
+
+    // 2. 可以是 obj, 也可以是返回 obj 的函数
+    // provide: {
+    //   name: '小明',
+    // },
+
+    setup(props, context) {
+      nameRelativeEffect();
+      return {};
+    }
+  }
+  </script>
+  ```
+- 在子孙组件
+  ```html
+  <template>
+    <div @click='handleClick'>{{name}}</div>
+  </template>
+
+  <script>
+  import { inject } from 'vue';
+  export default {
+    // 2. inject 接收 provide 传过来的值
+    // 2. inject 也可以简单写成 --> inject:['name', 'changeName']
+    // 2. 如果inject要写在 export default {} 下,那就这么写; 注意可以有`from|default`两个属性
+    // inject: {
+    //   name: 'name',
+    //   changeName: {
+    //     from: 'changeName',
+    //     default: () => { },
+    //   }
+    // },
+    setup(props, context) {
+      // 3. inject 在 setup() 中的写法
+      const name = inject('name');
+      const changeName = inject('changeName');
+      // 3. inject 接收的参数应该在 provide 那里修改,这才符合单向数据流的要求
+      function handleClick() {
+        changeName(name.value === '小明' ? '小红' : '小明');
+      }
+      return { name, handleClick };
+    }
+  }
+  </script>
+  ```
+
+## vue3中`this.$refs[key]`的新写法
+```html
+<template>
+  <div ref="hello">你好</div>
+</template>
+
+<script>
+import { ref, provide, readonly } from 'vue';
+
+export default {
+  mounted() {
+    // <div ref="hello">你好</div>
+    console.log(this.hello);
+  },
+  setup(props, context) {
+    // 1. vue2.x中的 this.$refs[key] 的写法变成了下面这种
+    // 1. 条件一：ref 传值为 null
+    // 1. 条件二：变量名 hello 与 <div ref="hello">你好</div> 中的`ref="hello"`的 hello 相同
+    const hello = ref(null);
+    return { hello };
+  }
+}
+</script>
+```
+
+
+
 ## v-slot
 - `<slot></slot>`无法绑定事件, 若需要绑定事件,就`<span @click="handleClick"> <slot></slot> </span>`
