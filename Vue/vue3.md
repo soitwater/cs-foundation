@@ -1,5 +1,10 @@
 # vue3
 
+## 删除旧版本的vue
+```c
+npm uninstall vue-cli -g
+yarn global remove vue-cli
+```
 ## Non-prop属性
 - 父组件给子组件传值,但子组件并未接收,那么所传值会原封不动出现在子组件的最外层dom元素上
 - 例如
@@ -276,6 +281,72 @@
   </style>
   ```
 
+## Suspense
+- 与`react`中相同含义, 让你可以`等待`目标代码加载，并且可以直接指定一个加载的界面(像是个`spinner`)，让它在用户等待的时候显示
+- 例子
+  ```html
+  <!-- App.vue -->
+  <template>
+    <div id="app">
+      <div v-if="error">{{ error }}</div>
+      <Suspense v-else>
+        <template #default>
+          <HelloWorld />
+        </template>
+        <template #fallback>
+          Loading...
+        </template>
+      </Suspense>
+    </div>
+  </template>
+
+  <script>
+  import HelloWorld from "./components/HelloWorld.vue";
+  import { onErrorCaptured, ref } from "vue";
+
+  export default {
+    components: {
+      HelloWorld,
+    },
+    setup() {
+      const error = ref(null);
+      onErrorCaptured(e => {
+        error.value = e;
+        // 不对错误进行拦截
+        return true;
+      });
+      return { error };
+    },
+  }
+  </script>
+  ```
+  ```html
+  <template>
+    <div>
+      <h1>{{ user.name }}</h1>
+      <h1>{{ user.age }}</h1>
+    </div>
+  </template>
+
+  <script>
+  export default {
+    async setup() {
+      const fetchUser = () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ name: "Carlo", age: "20" });
+            // reject("Error, fail!");
+          }, 3000);
+        });
+      };
+
+      const user = await fetchUser();
+      return { user };
+    },
+  }
+  </script>
+  ```
+  
 ## ref | reactive | readonly | toRefs 
 ```html
 <template>
