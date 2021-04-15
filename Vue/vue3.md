@@ -731,7 +731,472 @@ export default {
 </script>
 ```
 
+## mixin
+- 在vue3中不再推荐使用`mixin`了,因为有更好用的`composition api`;
+- 示例
+  ```js
+  // src/main.js
+  import { createApp } from 'vue'
+  import App from './App.vue'
+  import router from './router'
+  import store from './store'
+  import mitt from 'mitt'
+  import myMixin from './mixin.js';
 
+  const app = createApp(App);
+  app.use(store).use(router);
+  // 4. 全局mixin
+  app.use(myMixin); 
+  app.mount('#app');
+
+  app.config.globalProperties.$emitter = mitt();
+  // 5. 自定义 mixin 与 this.$options(自定义属性的)优先级
+  app.config.optionMergeStrategies.optionNum = (mixinVal, appVal) => {
+    console.log('自定义mixin与this.$options[key] 的优先级, 令其相反')
+    return mixinVal || appVal;
+  }
+  ```
+  ```js
+  // src/mixin.js
+  // 全局 mixin, 一般不推荐使用, 因为难维护 
+  export default {
+    install(Vue) {
+      Vue.mixin({
+        data() {
+          return {
+            globalMixinCount: '全局mixin的值'
+          }
+        }
+      })
+    }
+  }
+  ```
+  ```js
+  // Home.vue
+  <template>
+    <!-- 1. 当组件内已经有 number 了, 则不使用 mixin 里的number, 而是组件自己的 number（组件内部优先级更高）-->
+    <!-- 1. 输出1-->
+    <div>{{number}}</div>
+    <div @click='handleClick'>click me</div>
+    <!-- 4. 全局mixin -->
+    <HelloWorld />
+  </template>
+
+  <script>
+  import HelloWorld from '../components/HelloWorld.vue';
+
+  const myMixin = {
+    // 5. mixin中的optionNum
+    optionNum: 98,
+    data() {
+      return {
+        number: 2,
+      }
+    },
+    mounted() {
+      console.log('混入')
+    },
+    methods: {
+      handleClick() {
+        console.log('点击:mymixin');
+      }
+    },
+  };
+
+  export default {
+    // 0. 混入
+    // 0. 这里的mixin是局部的, myMixin 只在当前组件有效, 无法在当前组件之外的其他组件(含子组件)使用
+    mixins: [myMixin],
+    // 5. 当前实例的数字
+    optionNum: 99,
+    components: {
+      HelloWorld,
+    },
+    // 1. this.$options.number (自定义属性) 的优先级也比 mixin 高
+    number: 0,
+    data() {
+      return {
+        number: 1
+      }
+    },
+    mounted() {
+      // 2. 先执行 mymixin 内的生命周期函数,再执行组件内的 生命周期函数
+      console.log('组件');
+    },
+    created() {
+      console.log('this.$options.optionNum 与 mixin中的optionNum 的优先级', this.$options.optionNum);
+    },
+    methods: {
+      // 3. 同组件的`data`, 组件内的`methods`会覆盖`mymixin`里的`methods`
+      handleClick() {
+        console.log('点击:组件');
+      }
+    },
+  }
+  </script>
+  ```
+  ```js
+  // src/components/HelloWorld.vue
+  <template>
+    <div>子组件: {{globalMixinCount}}</div>
+  </template>
+  ```
+
+## 自定义指令
+- src/main.js
+  ```js
+  import { createApp } from 'vue'
+  import App from './App.vue'
+  import router from './router'
+  import store from './store'
+  import mitt from 'mitt'
+  import {consoleLog} from "./directive.js"
+
+  const app = createApp(App);
+  app.use(store).use(router);
+
+  // 1. 全局指令
+  app.directive('console-log', consoleLog);
+  app.mount('#app');
+  app.config.globalProperties.$emitter = mitt();
+  ```
+- src/directive.js
+  ```js
+  export const consoleLog = {
+    beforeMount() {
+      console.log('自定义全局指令v-console beforeMount');
+    },
+    mounted(el) {
+      console.log('自定义全局指令v-console mounted');
+    },
+    beforeUpdate() {
+      console.log('自定义全局指令v-console beforeUpdate');
+    },
+    updated() {
+      console.log('自定义全局指令v-console updated');
+    },
+    beforeUnmount() {
+      console.log('自定义全局指令v-console beforeUnmount');
+    },
+    unmounted() {
+      console.log('自定义全局指令v-console unmounted');
+    },
+  }
+  ```
+- src/views/Home.vue
+  ```html
+  <template>
+    <!-- 1. -->
+    <div v-console-log>全局自定义指令v-console-log</div>
+    <!-- 2. -->
+    <div v-part:myname.foo.bar="{key: '???'}" id='v-part-div'>局部自定义指令v-part</div>
+  </template>
+
+  <script>
+  export default {
+    directives: {
+      part: {
+        mounted(el, binding, vnode) {
+          console.log('el表示所绑定的元素：', el);
+          // 2.
+          console.log('局部指令', binding);
+          console.log('局部指令: 值value, 即v-part=""中等号后面的内容 ', binding.value);
+          console.log('局部指令: 更新前的旧值 ', binding.oldValue);
+          console.log('局部指令: 传入的参数, 如 v-part:myname= 中的 myname ', binding.arg);
+          console.log('局部指令: 修饰符，如 v-part:myname.foo.bar 中的 .foo.bar, 打印为 {bar:true,foo:true}', binding.modifiers);
+          console.log('局部指令: vnode', Object.keys(vnode))
+        }
+      }
+    },
+    setup() {
+      return {
+        handleClick: () => { console.log('click', new Date()) },
+      }
+    }
+  }
+  </script>
+  ```
+
+## 插件
+- 向`Vue`添加`全局`级功能
+- src/main.js
+  ```js
+  import { createApp } from 'vue'
+  import App from './App.vue'
+  import router from './router'
+  import store from './store'
+  import mitt from 'mitt'
+  import { myPlugin } from './plugins.js'
+
+
+  const app = createApp(App);
+  app.use(store).use(router);
+
+  // 1. 插件
+  app.use(myPlugin, {name: '小明'});
+
+  app.mount('#app');
+
+  app.config.globalProperties.$emitter = mitt();
+  ```
+- src/plugins.js
+  ```js
+  export const myPlugin = {
+    install(app, options) {
+      // 1. app 表示当前vue实例
+      console.log('插件', app);
+      // 1. 表示 app.use(myPlugin, {name: '小明'}); 时传入的 {name: '小明'}
+      console.log('插件', options);
+      // 2. 在全局vue声明一个变量name
+      app.provide('name', '全局插件-provide：name的值');
+      // 3. 可以在全局插件上, 定义全局变量, 定义全局指令, 混入组件选项, 定义全局方法
+      app.mixin({
+        mounted() {
+          console.log('全局插件-mixin： mounted');
+        }
+      });
+      app.directive('focus', {
+        mounted(el) {
+          console.log('全局插件-指令: focus');
+        }
+      });
+      app.config.globalProperties.$sayHello = '全局插件-全局属性: hello world!';
+    }
+  };
+  ```
+- src/views/Home.vue
+  ```html
+  <template>
+    <div v-focus>{{name}}</div>
+  </template>
+
+  <script>
+
+  export default {
+    // 2. 接收全局插件的变量name
+    inject: ['name'],
+    mounted() {
+      console.log('组件内mounted时获取', this.$sayHello);
+    },
+  }
+  </script>
+  ```
+
+
+## 待定render
+```js
+import { h } from 'vue';
+
+// 普通组件
+export const ComponentA = {
+  render: function() {
+    const text = this.type + "->" + this.name;
+    return h(
+      // 标签
+      'p',
+      // 标签内属性
+      {},
+      // 子元素
+      text
+    );
+  },
+  props: {
+    type: { 
+      type: String, 
+      required: true 
+    },
+    name: { 
+      type: String, 
+      required: true 
+    },
+  }  
+}
+
+// 渲染多个 vnode
+export const ComponentB = {
+  render: function() { 
+    // 'text' 即 'domProps'
+    let childP = { render () { return h ("div", "text子元素") }};
+    
+    return h ( 
+      "div",
+      {},
+      [h(childP), h(childP)]
+    ) 
+  }, 
+};
+
+
+// slot 的深复制
+export const ComponentC = {
+  render: function() {
+    function cloneVNode (vnode) { // 克隆 slot 节点的方法
+      // 递归遍历子节点，并克隆
+      const clonedChildren = vnode.children && vnode.children.map(vnode => cloneVNode(vnode))
+
+      const cloned = h(vnode.tag, vnode.data, clonedChildren);
+      console.log('vnode:\n',vnode);
+      cloned.text = vnode.text;
+      cloned.isComment = vnode.isComment;
+      cloned.componentOptions = vnode.componentOptions;
+      cloned.elm = vnode.elm;
+      cloned.context = vnode.context;
+      cloned.ns = vnode.ns;
+      cloned.isStatic = vnode.isStatic;
+      cloned.key = vnode.key;
+
+      return cloned;
+    } 
+    const vNodes = this.$slots.myslot;
+    console.log('noted?', this.$slots, '\n', vNodes)
+    const clonedVNodes = vNodes.map(vnode => cloneVNode(vnode))
+
+    return h ( 
+      "div",
+      clonedVNodes
+    ) 
+  }, 
+};
+```
+
+```html
+<template>
+  <div>hello, world</div>
+  <ComponentA v-for="(item, index) of books" :key="index" :type="item.type" :name="item.name" />
+  <ComponentB />
+  <ComponentC>
+    <template #myslot>
+      <p>render function</p>
+    </template>
+  </ComponentC>
+</template>
+
+<script>
+import { ComponentA, ComponentB, ComponentC } from '../components/HelloWorld.js';
+
+export default {
+  components: {
+    ComponentA, ComponentB, ComponentC,
+  },
+  data() {
+    return {
+      books: [{ type: "小说", name: "西游记" }, { type: "诗词", name: "唐诗三百首" }],
+    }
+  },
+}
+</script>
+```
 
 ## v-slot
 - `<slot></slot>`无法绑定事件, 若需要绑定事件,就`<span @click="handleClick"> <slot></slot> </span>`
+
+
+## v-router 新特性
+```js
+// src/router/index.js
+
+// ......
+
+const router = createRouter({
+  // createWebHashHistory() 表示hash模式; 
+  // createWebHistory() 表示非hash模式
+  history: createWebHashHistory(),
+  routes
+})
+
+// ......
+```
+```html
+<!--在组件内-->
+<template>
+  <div @click="handleClick">click</div>
+</template>
+
+<script>
+import { getCurrentInstance, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+export default {
+  setup(props, context) {
+    const { proxy } = getCurrentInstance();
+    // 获取 router
+    const router = useRouter();
+    // 获取 route
+    const route = useRoute();
+    onMounted(() => {
+      // true
+      console.log(proxy.$router === router);
+      // {path, params, query...}
+      console.log(route);
+    });
+  },
+}
+</script>
+```
+
+## getCurrentInstance
+```js
+import { getCurrentInstance } from 'vue';
+// 获取当前组件实例
+const instance = getCurrentInstance();
+
+// 获取当前组件的上下文，下面两种方式都能获取到组件的上下文。
+// 方式一，这种方式只能在开发环境下使用，生产环境下的ctx将访问不到
+const { ctx }  = getCurrentInstance();  
+// 方式二，此方法在开发环境以及生产环境下都能放到组件上下文对象（推荐）
+const { proxy }  = getCurrentInstance();  
+// ctx 中包含了组件中由ref和reactive创建的响应式数据对象,以及以下对象及方法;
+proxy.$attrs
+proxy.$data
+proxy.$el
+proxy.$emit
+proxy.$forceUpdate
+proxy.$nextTick
+proxy.$options
+proxy.$parent
+proxy.$props
+proxy.$refs
+proxy.$root
+proxy.$slots
+proxy.$watch
+```
+
+## mitt
+- 由于`Vue3.x`中删除了`on`和`off`，因此不能借助于一个单独的Vue实例来实现全局事件的发布和订阅与取消订阅（也就是跨组件通讯）
+- 可以使用三方库`cnpm install -S mitt`(https://www.npmjs.com/package/mitt)
+- 使用示例
+  ```js
+  // src/main.js
+  import { createApp } from 'vue'
+  import App from './App.vue'
+  import router from './router'
+  import store from './store'
+  import mitt from 'mitt'
+
+  const app = createApp(App);
+  app.use(store).use(router).mount('#app');
+  // 添加
+  app.config.globalProperties.$emitter = mitt();
+  ```
+  ```html
+  <!-- 组件内 -->
+  <template>
+    <div @click="handleClick">click</div>
+  </template>
+
+  <script>
+  import { toRefs, getCurrentInstance } from 'vue';
+
+  export default {
+    setup(props, context) {
+      // 获取实例
+      const { proxy } = getCurrentInstance();
+      // 注册事件
+      proxy.$emitter.on('handle-click', (data) => alert(data));
+      // 触发事件
+      const handleClick = () => proxy.$emitter.emit('handle-click', Math.ceil(Math.random() * 100));
+      return { handleClick };
+    },
+  }
+  </script>
+  ```
