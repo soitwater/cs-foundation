@@ -1,10 +1,19 @@
 # vue3
 
-## 删除旧版本的vue
+## 安装
+### 删除旧版本的vue
 ```c
 npm uninstall vue-cli -g
 yarn global remove vue-cli
 ```
+
+### 安装最新的vue全家桶
+```
+npm install -g @vue/cli
+npm install vuex@next --save
+npm install vue-router@next --save
+```
+
 ## Non-prop属性
 - 父组件给子组件传值,但子组件并未接收,那么所传值会原封不动出现在子组件的最外层dom元素上
 - 例如
