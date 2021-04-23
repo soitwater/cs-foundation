@@ -94,5 +94,20 @@ fetch(myRequest).then(function(response) {
 });
 ```
 
+## 兼容性
+- 对于不兼容`fetch`的浏览器
+- 命令
+  ``` js
+  // 安装
+  npm install whatwg-fetch --save
+  // 引入
+  import {fetch as fetchPolyfill} from 'whatwg-fetch';
+  
+  // 使用原生
+  window.fetch(...)
+  // 使用polyfill
+  fetchPolyfill(...)  // use polyfill implementation
+  ```
+
 ## 参考
 - [MDN文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch#Body)
