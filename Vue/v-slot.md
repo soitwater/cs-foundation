@@ -18,30 +18,43 @@
 - 作用域插槽
   * 父页面
     ```html
-    <todo-list>
-     <template v-slot:todo="slotProps" >
-       {{slotProps.user.firstName}}
-      </template> 
-    </todo-list> 
-    //slotProps 可以随意命名
-    //slotProps 接取的是子组件的 props
+    <HeaderItem :msg="item" v-for='(item, index) of headerMsg' :key='index'>
+      <!--slotProps 可以随意命名-->
+      <!--slotProps.label 表示的是子组件对应的`slot`上的标签属性 label-->
+      <template v-slot:label='slotProps'>{{slotProps.label}}</template>
+    </HeaderItem>
+
+    <script>
+    export default {
+      data() {
+        return {
+          headerMsg: [
+            { label: '今日重启(次)', num: '--', },
+            { label: '本周重启(次)', num: '--', },
+            { label: '本月重启(次)', num: '--', },
+            { label: '本季度重启(次)', num: '--', },
+            { label: '本年度重启(次)', num: '--', },
+          ],
+        }
+      },
+    }
+    </script>
     ```
   * 子页面
     ```js
-    <slot name="todo" :user="user" :test="test">
-      {{ user.lastName }}
-    </slot> 
-    data() {
-        return {
-          user:{
-            lastName:"Zhang",
-            firstName:"yue"
-          },
-          test:[1,2,3,4]
-        }
-      },
-    // {{ user.lastName }}是默认数据  当父页面没有(="slotProps")时显示 Zhang
-    // 上面显示的是：yue
+    <template>
+      <div class="header-item">
+        <slot name='label' :label="msg.label">文字信息</slot>
+      </div>
+    </template>
+
+    <script>
+    export default {
+      props: {
+        msg: {},
+      }
+    }
+    </script>
     ```
 
 ## 参考
