@@ -214,3 +214,161 @@ fail2: Error: error
     at success (...)
     at ...
 ```
+
+## 手动实现maxRequest
+- 实现maxRequest，成功后resolve结果，失败后重试，尝试超过一定次数才真正的reject
+  ```js
+  function maxRequest(fn, maximum) {
+    return new Promise((resolve, reject) => {
+      function helper(num) {
+        Promise
+          .resolve(fn())
+          .then((val) => {
+            resolve(val);
+          })
+          .catch((err) => {
+            if(num - 1 > 0) {
+              console.log('重试: ', num);
+              helper(num - 1);
+            } else {
+              reject(err);
+            }
+          })
+      };
+
+      helper(maximum);
+    });
+  }
+
+  function getData(num) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject('错误: ' + num);
+      }, 500);
+    });
+  }
+
+  maxRequest(getData.bind(null, 666), 10);
+  ```
+
+## 实现Promise.all
+```js
+// Promise.all接收一个参数, 参数的类型是`数组`
+function PromiseAll(promises) {
+  // 如果全部resolve(), 那么Promise.all的返回结果将是一个数组
+  const values = [];
+  let count = 0;
+  return new Promise((resolve, reject) => {
+    promises.forEach((promise, index) => {
+      Promise
+        .resolve(promise())
+        .then((val) => {
+          count++;
+          values[index] = val;
+          // 全部执行完毕则resolve()
+          if(count === promises.length) {
+            console.log('全部正确: ' + values.join(','))
+            resolve(values);
+          }
+        })
+        .catch((err) => {
+          // Promise.all遇到第一个reject,会直接跳出
+          reject(err);
+        })
+    });
+  })
+}
+
+function getData(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(num);
+    }, 500);
+  });
+}
+
+function getWrongData(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject('错误: ' + num);
+    }, 500);
+  });
+}
+
+PromiseAll([
+  getData.bind(null, 10),
+  getData.bind(null, 20),
+  getData.bind(null, 30),
+]);
+
+PromiseAll([
+  getData.bind(null, 10),
+  getWrongData.bind(null, 20),
+  getData.bind(null, 30),
+]);
+```
+
+## 实现Promise.allSettled
+```js
+// Promise.allSettled接收一个参数, 参数的类型是`数组`
+function PromiseAllSettled(promises) {
+  const values = [];
+  let count = 0;
+  return new Promise((resolve, reject) => {
+    promises.forEach((promise, index) => {
+      Promise
+        .resolve(promise())
+        .then((val) => {
+          values[index] = {
+            value: val,
+            reason: null,
+          };
+        })
+        .catch((err) => {
+          values[index] = {
+            value: null,
+            reason: err,
+          };
+        })
+        .finally(() => {
+          count++;
+          // 全部执行完毕则resolve()
+          if(count === promises.length) {
+            console.log('返回: ' + values);
+            resolve(values);
+          }
+        })
+    });
+  });
+}
+
+function getData(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('正确: ' + num);
+      resolve(num);
+    }, 1000);
+  });
+}
+
+function getWrongData(num) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('错误! ' + num);
+      reject('错误: ' + num);
+    }, 1000);
+  });
+}
+
+PromiseAllSettled([
+  getData.bind(null, 10),
+  getData.bind(null, 20),
+  getData.bind(null, 30),
+]);
+
+PromiseAllSettled([
+  getData.bind(null, 10),
+  getWrongData.bind(null, 20),
+  getData.bind(null, 30),
+]);
+```
