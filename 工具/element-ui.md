@@ -308,3 +308,18 @@ this.$msgbox({ // search成功则： 弹窗提示跳转
 - [vue 按需引入element-ui时遇到的坑](https://blog.csdn.net/f056917/article/details/88789648)
 - [vue按需引入Element UI的方法](https://www.cnblogs.com/gitByLegend/p/10960504.htmlv)
 - [关于element-ui表格使用的一些方法](https://www.cnblogs.com/steamed-twisted-roll/p/9120924.html)
+
+
+## 表单验证 resetFields	
+- 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
+- 要求
+  * `form`要设置`ref`，调用`this.$refs[formName].resetFields()`
+  * `el-form-item`上设置`prop`字段，表单`rule验证`和`resetfields()`清理的都是`prop`绑定的字段	
+  * 重置为初始值是在表单的`mounted`生命周期之后,若在`mounted`直接赋值,需要`this.$nextTick(() => {})`
+
+### clearValidate	
+- 移除表单项的校验结果。
+- 传入待移除的表单项的`prop`属性或者`prop`组成的数组，如不传则移除整个表单的校验结果`Function(props: array | string)`
+
+### 参考
+- [官方文档](https://element.eleme.cn/2.13/#/zh-CN/component/form#form-item-attributes)
