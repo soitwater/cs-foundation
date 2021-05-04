@@ -323,3 +323,23 @@ this.$msgbox({ // search成功则： 弹窗提示跳转
 
 ### 参考
 - [官方文档](https://element.eleme.cn/2.13/#/zh-CN/component/form#form-item-attributes)
+
+## elementui中table翻页序号连续
+### template 中
+```html
+<el-table-column
+  type="index"
+  fixed="left"
+  align="center"
+  :index="table_index"  //这里绑定一个方法，将返回值赋给index,即表格每行数据的下标
+>
+</el-table-column>
+```
+### methods 中
+```js
+methods: {
+  table_index(index) {
+    return (this.currentPage-1) * this.pageSize + index + 1;
+}
+// 其中：this.currentPage为当前页码，this.pageSize为每页数据条数。
+```
