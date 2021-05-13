@@ -343,3 +343,30 @@ methods: {
 }
 // 其中：this.currentPage为当前页码，this.pageSize为每页数据条数。
 ```
+
+## el-rate
+```html
+<!-- disabled-void-icon-class	只读时未选中 icon 的类名 -->
+<el-rate v-model="item.star" disabled-void-icon-class="el-icon-unselect-star" disabled></el-rate>
+
+<style>
+/* 所有的星星 */
+.el-rate__icon {
+  font-size: 22px !important;
+}
+/* 改变未选中的星星的颜色 */
+.el-icon-unselect-star {
+  color: #472a22 !important;
+}
+/* 必须加上这一句, 不然不显示星星 */
+.el-icon-unselect-star:before {
+  content: "\e797";
+}
+/* 已选中的星星的颜色改为渐变色 */
+.el-icon-star-on {
+  background-image: linear-gradient(to bottom right, #ffd73b, #f06816);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+</style>
+```
