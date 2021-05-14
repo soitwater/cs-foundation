@@ -370,3 +370,6 @@ methods: {
 }
 </style>
 ```
+
+## el-cascader
+- 如果最后一级的数据为空,应设置次级的`children`为`undefined`,否则无法监听选项变化
