@@ -35,5 +35,11 @@
 - 建议项目带上`package.lock`
 
 
+## 技巧
+```js
+// 查看某依赖是否已安装
+npm info xxx
+```
+
 ## 参考
 - [npm install --save 和 npm install -d的区别](https://blog.csdn.net/wangguoyu1996/article/details/80443861)
