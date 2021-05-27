@@ -1,5 +1,18 @@
 # Vue-router
 
+## 概念
+- 路由分为2种：
+  * 基于`HTMLl5 history api` 
+  * 基于`Hash`
+  * 前者以`/`分割，改变URL页面其实没跳转，需要服务端支持，即不同的URL都指向同一个HTML文件
+  * 后者以`#`分割
+
+## 获取路由参数
+```js
+this.$route.params  // 类似于 /detail/:id  即 /detail/1
+this.$route.query // 类似于  /detail?id=1
+```
+
 ## 创建
 - 新建routes.js 以及 router.js
 - router.js
@@ -12,37 +25,38 @@
   ```
 - routes.js
   ```js
-  const routes = : [
+  const routes = [
     {
       path: '/',        // 路径
       name: 'Main',
       component: Main,
     }
-  ]
+  ];
   ```
 
 ## router 配置
-- 在`App.vue`中配置`<router-view/>`
+- 在`App.vue`中配置`<router-view />`
 - 重定向
   ```js
-  { // 当路由是 "/" 时会跳转到新路由 "/app"
+  { 
+    // 当路由是 "/" 时会跳转到新路由 "/app"
     path: "/",
     redirect: "/app"
   }
   ```
 - 更改`hash`路由
-  hash路由多用于定位(页面锚点)(旧),history才是用于记录状态的(新)  
-  因为hash本意是做页面定位(锚点),如果将hash用于路由,那么原来的锚点将无法使用(因此后来又设计了history)  
-  且hash不会被搜索引擎解析  
-  修改路由模式：  
-  ```js
-  export default () => {
-    return new Router({
-      routes,
-      mode: "history"     // hash
-    })
-  }
-  ```
+  * hash路由多用于定位(页面锚点)(旧),history才是用于记录状态的(新)  
+  * 因为hash本意是做页面定位(锚点),如果将hash用于路由,那么原来的锚点将无法使用(因此后来又设计了history)  
+  * 且hash不会被搜索引擎解析  
+  * 修改路由模式：  
+    ```js
+    export default () => {
+      return new Router({
+        routes,
+        mode: "history"     // hash
+      })
+    }
+    ```
 - `base`路由前缀(不常用)  
   将在浏览器的路由前添加前缀 "/base/"(即:基路径)  
   不过在路由访问时, 即使不添加前缀也依然可以访问  
@@ -234,6 +248,7 @@ NO.5 使用back () {
 假如命名的是一个 动态路由， 那么 v-bind:to='{name: "picture", params: {id: 123}}'
 注意这里的params使用 {{$route.params.id}} 来接收
 ```
+
 ## routes 配置
 - name 与 meta 与 children
   ```js
@@ -332,12 +347,36 @@ const router = new VueRouter({
 在`main.js`,规定每次执行路由前都会调用此钩子函数    
 以下三个钩子函数按顺序执行
 ```js
-router.beforeEach((to, from, next) => {
+import router from './router'
+// 导入 router
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App),
+  components: { App },
+  template: '<App/>'
+})
+// 路由守卫
+router.beforeEach((to, from, next) => { 
   // 常用于数据的校验
   if (to.fullPath === "/app") { // 验证部分页面需要用户先登录
     next("/login") 
   }
-})
+
+  // 避免未登陆直接访问其他页面
+  if (to.matched.some(record => record.meta.requireAuth)) { // 判断该路由是否需要登录权限
+    if (store.state.isLogin) { // 判断当前的token是否存在 ； 登录存入的token
+      next()
+    } else {
+      next({
+        path: '/',
+        query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      })
+    }
+  } else {
+    next()
+  }
+});
 ```
 ```js
 router.beforeResolve((to, from, next) => {

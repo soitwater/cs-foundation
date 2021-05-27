@@ -4,17 +4,17 @@
 - [官网](https://zh.nuxtjs.org/guide/installation)
 - 安装命令直接看官网的
 - 创建即配置: 
-  * Nuxt.js 会依据 pages 目录中的所有 *.vue 文件生成应用的路由配置。
+  * Nuxt.js 会依据`pages`目录中的所有`*.vue`文件生成应用的路由配置。
   * 创建了相应的文件夹,相当于配置了相应的功能,如项目中有文件夹`store/index.js`,相当于配置的新功能`vuex`
 - 工作流
   ![工作流](../assets/工作流.png)
 - 别名
-  ~ 或 @ 表示项目根路径
+  * `~` 或 `@` 表示项目根路径
 
 ## 文件夹
 ```js
 .nuxt               :临时编译生成的文件
-README .md          :辅助文档
+README.md           :辅助文档
 assets              :放置静态资源文件，比如说css文件等
 backpack.config.js  :后端编译脚本
 build               :所有编译完后的目录

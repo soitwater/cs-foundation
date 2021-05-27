@@ -66,7 +66,7 @@ npm install vue-router@next --save
   * default
   * validator 校验
 - 如何修改父组件传给子组件的值
-  * 父组件传给子组件的`props`是不允许修改, 若想修改, 可以
+  * 父组件传给子组件的`props`是不允许修改, 若想修改, 可以用`computed`(略)
     ```js
     // 子组件
     export default {

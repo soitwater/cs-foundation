@@ -137,7 +137,7 @@
   )
   
   export default {
-    shp2json: (data) => axios.create({headers:{"Content-type":"application/x-www-form-urlencoded"}}).post('/file/  shp2json', data), 
+    shp2json: (data) => axios.create({headers:{"Content-type":"application/x-www-form-urlencoded"}}).post('/file/shp2json', data), 
   }
   ```
 - 新建bus.js
