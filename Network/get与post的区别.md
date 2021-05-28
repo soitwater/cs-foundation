@@ -63,5 +63,12 @@
 - 服务器: Apache：Apache能接受url长度限制为8 192 字符
 - 服务器：IIS：Microsoft Internet Information Server(IIS)能接受url长度限制为16384个字符。这个是可以通过修改的（IIS7）
 
+## 注意
+- 前端的`GET`请求是不能携带`body`参数的，只能放在`url`中
+  * 理由
+    - 不符合规范，浏览器会阻止这种行为的
+    - 但服务器就随意了，`nodejs`或`postman`，不遵循规范也没关系
+
+
 ## 参考
 - [post与get的区别](https://juejin.cn/post/6844904023909236749)
