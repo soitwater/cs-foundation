@@ -115,3 +115,17 @@
     end_of_line = lf
     insert_final_newline = true
     ```
+
+## vscode换行问题HTML属性问题
+### 1
+```js
+// 项目根目录加个.prettierrc 配置
+{ 
+ "printWidth": 120,
+}
+```
+
+### 2 
+```js
+进入文件>首选项>设置，打开设置界面，在常用设置下找到Editor:Word Wrap，修改为wordWrapColumn模式，然后在下一行中，设置到多少列，自动折行
+```
