@@ -1,6 +1,6 @@
 # mouseenter和mouseleave与mouseover和mouseout的区别
 
-## mouseenter（指针穿过，子集不执行）
+## mouseenter（指针穿过，子元素不执行）
 - 当鼠标指针穿过（进入）被选元素时，会发生 mouseenter 事件。
 - 注意：与 mouseover 事件不同，mouseenter 事件只有在鼠标指针进入被选元素时被触发，mouseover 事件在鼠标指针进入任意子元素时也会被触发。
 

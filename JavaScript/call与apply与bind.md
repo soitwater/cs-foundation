@@ -73,7 +73,7 @@ Function.prototype.myBind = function (context) {
     if (this instanceof F) {
       return new _this(...args, ...arguments)
     }
-    // args 是 play.myBind(person) 里的 person; arguments 是 play.myBind(person)() 里的 ()
+    // args 是 play.myBind(person) 里的 person; arguments 是 play.myBind(person)() 里的 () 
     return _this.apply(context, args.concat(...arguments))
   }
 }
