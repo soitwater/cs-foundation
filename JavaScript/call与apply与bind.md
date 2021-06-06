@@ -67,7 +67,7 @@ Function.prototype.myBind = function (context) {
   var args = [...arguments].slice(1)
   // 返回一个函数
   return function F() {
-    // 因为返回了一个函数，我们可以 new F()，所以需要判断 
+    // 因为返回了一个函数，我们可以 new F()，所以需要判断  
     // 即play.myBind(person)返回的是一个函数
     // 有可能是 new play.myBind(person)() 的情况
     if (this instanceof F) {
