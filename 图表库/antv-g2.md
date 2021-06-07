@@ -219,3 +219,9 @@ userView.polygon()
 userView.interaction('element-active');
 this.chartMap.render();
 ```
+
+## 如何偏移图表的位置
+```js
+// 左移 50
+chart.middleGroup.move(-50, 0);
+```
